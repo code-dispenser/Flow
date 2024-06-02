@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\Assets\FlowKey.snk</AssemblyOriginatorKeyFile>
+    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
+    <Title>Flow</Title>
+    <Version>1.0.0</Version>
+    <Authors>Paul Kent</Authors>
+    <Description>The Flow&lt;T&gt; class is a lightweight monadic result type that encapsulates the outcome of an operation, returning either a success or failure value. Designed for seamless integration, Flow&lt;T&gt; and its associated failure classes are attributed for both gRPC code-first and System.Text.Json serialization.</Description>
+    <Copyright>Copyright (c) 2024 Paul Kent.</Copyright>
+    <PackageProjectUrl>https://github.com/code-dispenser/Flow</PackageProjectUrl>
+    <PackageIcon>icon-64.png</PackageIcon>
+    <RepositoryUrl>https://github.com/code-dispenser/Flow</RepositoryUrl>
+    <PackageTags>operation result; result; monad; functional; method chaining</PackageTags>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="protobuf-net" Version="3.2.30" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Flow.Core.Tests.Unit" key="0024000004800000940000000602000000240000525341310004000001000100d98b8fccbaa9c1dc43b368cd0151509b31a645a3e20987945f7d625464a150f0a9e44343b14312c18928332ffb2148276160a94dbb04125368a6258d0aa0bbf199f3e23941a6ed86f5b73a2c42fcb66a6a9cce52cdcab17fc0803d503c6f3b25153b5ee602d7a7c0ddc962adb231b776c0ceefc65e2c0b15e76f42c181a1b2b5" />
+		<InternalsVisibleTo Include="Flow.Core.Tests.SharedDataAndixtures" key="0024000004800000940000000602000000240000525341310004000001000100d98b8fccbaa9c1dc43b368cd0151509b31a645a3e20987945f7d625464a150f0a9e44343b14312c18928332ffb2148276160a94dbb04125368a6258d0aa0bbf199f3e23941a6ed86f5b73a2c42fcb66a6a9cce52cdcab17fc0803d503c6f3b25153b5ee602d7a7c0ddc962adb231b776c0ceefc65e2c0b15e76f42c181a1b2b5" />
+		<InternalsVisibleTo Include="Flow.Core.Tests.Functional" key="0024000004800000940000000602000000240000525341310004000001000100d98b8fccbaa9c1dc43b368cd0151509b31a645a3e20987945f7d625464a150f0a9e44343b14312c18928332ffb2148276160a94dbb04125368a6258d0aa0bbf199f3e23941a6ed86f5b73a2c42fcb66a6a9cce52cdcab17fc0803d503c6f3b25153b5ee602d7a7c0ddc962adb231b776c0ceefc65e2c0b15e76f42c181a1b2b5" />
+
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\..\Assets\icon-64.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\..\License.txt">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\..\ReadMe.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+</Project>

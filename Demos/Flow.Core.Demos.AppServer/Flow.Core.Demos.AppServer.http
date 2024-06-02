@@ -1,0 +1,7 @@
+@Flow.Core.Demos.AppServer_HostAddress = https://localhost:7209
+
+GET {{Flow.Core.Demos.AppServer_HostAddress}}/weatherforecast/
+Accept: application/json
+###
+GET {{Flow.Core.Demos.AppServer_HostAddress}}/customer/
+Accept: application/json
