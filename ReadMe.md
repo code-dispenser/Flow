@@ -14,7 +14,7 @@
 
 ## Overview
 
-Flow is ...
+Flow is ... docs and readme in progress, not uploaded to nuget yet.
 ## Acknowledgments
 
 This library uses the attributes from the [protobuf-net](https://www.nuget.org/packages/protobuf-net) package to enable flow to be serialized using ProtoBuf code first. 
@@ -22,8 +22,8 @@ Many thanks to Marc Gravell and the contributors who work on that project.
 project/nuget package.
 
 
-<img src="https://raw.githubusercontent.com/code-dispenser/Conditionals/main/Assets/icons-64.png" align="middle" height="32px" alt="Conditionals icon" />
-<a target="_blank" href="https://icons8.com/icon/kxE6S5YOUvM6/if">If</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+<img src="https://raw.githubusercontent.com/code-dispenser/Flow/main/Assets/icon-64.png" align="middle" height="32px" alt="Flow icon" />
+<a target="_blank" href="https://icons8.com/icon/hem6U5Zq0H2c/flow">Flow</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
 <!--
 ![icon](https://raw.githubusercontent.com/code-dispenser/Flow/main/Assets/icon-48.png) Flow [icon by Icons8](https://icons8.com)
