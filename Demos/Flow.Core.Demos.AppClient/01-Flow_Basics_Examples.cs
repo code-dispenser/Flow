@@ -6,44 +6,44 @@ namespace Flow.Core.Demos.AppClient;
 public class Flow_Basics_Examples
 {
 
-/*
-    * Flow<T> is just a very simple structure that holds either a success value or a failure value, but importantly it is a return value (structure)
-    * that can be chained. The first question that everybody asks is, if the SuccessValue and FailureValue properties are private how do you get the values?
-     
-    * At some point you will most likely need the values, however, its the flow of these values which is important - hence the library name.
+    /*
+        * Flow<T> is a simple structure that holds either a success value or a failure value. It serves as a return value that can be chained.
+        * While the SuccessValue and FailureValue properties are private, accessing the values is still possible when needed.
+        * The flow of values is crucial, hence the library name.
+        * 
+        * Flow provides methods like map, bind, and match to transform the values inside the structure, return flows, and access the success or failure value.
+        * It also exposes public properties IsSuccess and IsFailure to indicate the type of value held in Flow.
+        * 
+        * Several extension methods are available to use Flow in a more fluent or DSL-like manner, utilizing the underlying map, bind, and match methods.
+        * Developers can create their own extension methods using these functions to create custom DSLs.
+        * 
+        * Flow resembles a monadic structure, especially due to the Bind function. It can be thought of as a box containing a value inside it.
+        * Map allows passing functions to transform the value in the box and returns a box with the transformed value.
+        * Bind allows passing functions that return a box containing the transformation of the existing value.
+        * 
+        * The output from Map and Bind is a box that can be further chained with other functions returning boxes (Flow).
+        * 
+        * Match allows providing functions for both success and failure cases. If it's a success, the success function is executed and returns a value; otherwise, the
+        * failure function is executed and returns a value.
+    */
 
-    * Flow has methods such as map, bind and match that can transform the values inside the flow (structure), return flows, and provide means 
-    * to access the success or failure value. It also has public properties IsSuccess and IsFailure to inform which type of value is held in Flow.
-     
-    * There are a few extension methods that help you use flow in a more fluent/dsl way, that use the underlying map, bind and match methods. 
-    * You can of course create your own extension methods using the map, bind and match functions, to form your own DSL etc
-    
-    * Flow is a monadic like structure (due the Bind function). It can sometimes help to think of flow (or monadic structures) as a box that contains a value inside it.
-    * Map - allows you to pass functions to transform the value in the box, and then returns a box with the transformed value in it. 
-    * Bind - allows you to pass functions that must return a box which can have the transformation of the exiting value inside it.
-    * 
-    * The key point is that the output from Map and Bind is a box, which can then be chained with other functions that return boxes (Flow).
-    * 
-    * Match - allows you to provide functions for both failure and successes. If its a success then that function is executed and returns the value, otherwise the
-    * failure function is executed and returns a value.
-
-*/
     public void RunPuttingValuesInAFlowExamples()
     {
         /*
-            * To put values into a flow, use the static methods or implicit (operators) conversion. A success value cannot be null or a type derived from Failure and
-            * a failure cannot be null and must be a type derived from Failure, otherwise an exception will be raised.
-        */ 
+            * To put values into a flow, use static methods or implicit conversions (operators). A success value cannot be null or a type derived from Failure, and
+            * a failure cannot be null; it must be a type derived from Failure. Otherwise, an exception will be raised.
+        */
 
         var explicitFlowSuccess = Flow<int>.Success(42);
-        var explicitFlowFailure = Flow<int>.Failed(new Failure.ApplicationFailure("Failed"));
+        var explicitFlowFailure = Flow<int>.Failed(new Failure.ApplicationFailure("Some reason for the failure"));
 
         Flow<int> implicitFlowSuccess = 42;
-        Flow<int> implicitFlowFailure = new Failure.ApplicationFailure("Failed");
+        Flow<int> implicitFlowFailure = new Failure.ApplicationFailure("Some reason for the failure");
+
 
         ExceptionHandler(() => Flow<string>.Success(null!));
         ExceptionHandler(() => Flow<string>.Failed(null!));
-  
+
         static void ExceptionHandler(Action action)
         {
             try
@@ -72,9 +72,9 @@ public class Flow_Basics_Examples
         var successFlow = Flow<int>.Success(42);
         var craftyFlow  = Flow<int>.Failed(new Failure.ApplicationFailure("Bad flow."));
         /*
-            * The purpose of structures like flow are to return a value, either a success or failure value, which forces you to think about both scenarios. 
-            * In order to get a value out of a Flow you need to use its Match method, which requires you to provide functions for both success and failure.
-        */ 
+            * The purpose of structures like Flow is to return a value, either a success or failure value, which forces you to think about both scenarios. 
+            * In order to get a value out of a Flow, you need to use its Match method, which requires you to provide functions for both success and failure.
+        */
         int successFlowOutput = successFlow.Match(failure => 24, success => success); //lambda that just takes the success value and then outputs the success value (success => success)
         int craftyFlowOutput  = craftyFlow.Match(failure => 24, success => success);  //if its a failure return the value 24 (_ => 24).
 
@@ -124,8 +124,8 @@ public class Flow_Basics_Examples
             * OnSuccess     - execute only on success, pass the current success value to an action and return the current flow or execute a flow returning function
             * OnSuccessTry  - a variant of the above that is wrapped in a try catch that you supply the exception handler to use in the catch block.
             * OnFailure     - execute only on failure, pass the current failure to an action and return the current flow or execute a flow returning function
-            * ReturnAs      - just a wrapper around Map to make things easier to read in circumstances where you are changing the type of thing in the box/flow.
-            * Finally       - return the value from the flow via two functions, one func for if its a failure the other func for success. 
+            * ReturnAs      - just a wrapper around Map to make things easier to read in circumstances where you are changing the type of value in flow.
+            * Finally       - return the value from the flow via two functions, one func for if its a failure the other func for success. A wrapper around Match.
             * 
             * There is also a helper utility FlowHandler that has a method TryToFlow which allows you to start a chain with the method content wrapped in try
             * catch that you provide the handler for (like OnSuccessTry). All of the above have been used in the simple client/server demo.

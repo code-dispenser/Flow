@@ -10,9 +10,9 @@ namespace Flow.Core.Demos.AppServer.Areas.Customers;
 
 public record CustomerSearchQuery(string companyName);
 
-public class CustomerSearchQueryHandler(CustomersDbWrite readOnlyDB, IDbExceptionHandler exceptionHandler)
+public class CustomerSearchQueryHandler(CustomersDbReadOnly readOnlyDB, IDbExceptionHandler exceptionHandler)
 {
-    private readonly CustomersDbWrite         _readWriteDB        = readOnlyDB;
+    private readonly CustomersDbReadOnly _readOnlyDB        = readOnlyDB;
     private readonly IDbExceptionHandler _exceptionHandler  = exceptionHandler;
 
     public Task<Flow<IEnumerable<CustomerSearchResult>>> Handle(CustomerSearchQuery searchCriteria)
@@ -22,7 +22,7 @@ public class CustomerSearchQueryHandler(CustomersDbWrite readOnlyDB, IDbExceptio
          */ 
         => FlowHandler.TryToFlow
             (
-                async () => await _readWriteDB.Customers.Where(c => c.CompanyName.Contains(searchCriteria.companyName)).Select(Customer.ProjectToCustomerSearchResult).ToListAsync(),
+                async () => await _readOnlyDB.Customers.Where(c => c.CompanyName.Contains(searchCriteria.companyName)).Select(Customer.ProjectToCustomerSearchResult).ToListAsync(),
                 exception => _exceptionHandler.Handle<IEnumerable<CustomerSearchResult>>(exception)
             );
 
