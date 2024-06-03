@@ -20,7 +20,7 @@ internal class Program
     */ 
 
 
-    private static readonly string _kestrelHost = "https://localhost:7209";  // <<<< Choose your poison for the ConfigureMicrosoftContainer.
+//    private static readonly string _kestrelHost = "https://localhost:7209";  // <<<< Choose your poison for the ConfigureMicrosoftContainer.
     private static readonly string _iisHost     = "https://localhost:44357"; // <<<< Choose your poison for the ConfigureMicrosoftContainer.
 
 
@@ -31,16 +31,17 @@ internal class Program
             * Logging disabled to concentrate on our console messages.
             * NOTE Remember to add the correct host for the server you want to run, it need https for grpc!
         */
+
         var resolver     = ConfigureMicrosoftContainer(_iisHost); // <<<<<<< make sure this matches what you start.  
 
         var grpcExamples = resolver.GetRequiredService<Grpc_With_Flow_Examples>();
         var jsonExamples = resolver.GetRequiredService<Http_Json_With_Flow_Examples>();
 
 
-        var flowExamples = new Flow_Basics_Examples();
+        var basicExamples = new Flow_Basics_Examples();
 
-        flowExamples.RunPuttingValuesInAFlowExamples();
-        flowExamples.RunGettingValuesOutOfAFlowExamples();
+        basicExamples.RunPuttingValuesInAFlowExamples();
+        basicExamples.RunGettingValuesOutOfAFlowExamples();
 
         await Console.Out.WriteLineAsync("\r\n< < < < Code below is the client server demo, make sure the server is up and running > > > >\r\n");
 

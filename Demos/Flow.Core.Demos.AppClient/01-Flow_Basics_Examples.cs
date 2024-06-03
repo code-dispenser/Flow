@@ -111,7 +111,6 @@ public class Flow_Basics_Examples
                                      }).Finally(failure => 24, success => success);//return 24 or the success value
 
 
-        static int IntFunc() => 5000;
 
         Console.WriteLine($"The value to use is: {craftyFlowOutput}");
         /*

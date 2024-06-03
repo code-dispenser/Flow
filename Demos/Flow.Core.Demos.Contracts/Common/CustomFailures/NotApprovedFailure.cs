@@ -10,7 +10,7 @@ public sealed class NotApprovedFailure : Failure
 {
     [JsonInclude][ProtoMember(1)] public string RejectedBy { get; }
 
-    private NotApprovedFailure() : base("", [], 0, false, null, null) { }
+    private NotApprovedFailure() : base("", [], 0, false, null, null) { RejectedBy = String.Empty; }
 
     [JsonConstructor]
     public NotApprovedFailure(string reason, string rejectedBy) : base(reason, [], 0, false, null, null)
