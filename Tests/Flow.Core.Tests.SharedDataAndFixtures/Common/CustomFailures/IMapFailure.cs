@@ -8,8 +8,8 @@ namespace Flow.Core.Tests.SharedDataAndFixtures.Common.CustomFailures;
 [ProtoContract]
 public class IMapFailure : Failure
 {
-    [JsonInclude][ProtoMember(1)] public string HostName { get; }
-    [JsonInclude][ProtoMember(2)] public string UserName { get; }
+    [JsonInclude][ProtoMember(1)] public string HostName { get; } = default!;
+    [JsonInclude][ProtoMember(2)] public string UserName { get; } = default!;
 
 
     private IMapFailure() : base("", [], 0, true, null, DateTime.UtcNow) { }

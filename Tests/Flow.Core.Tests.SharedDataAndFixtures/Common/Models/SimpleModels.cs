@@ -12,9 +12,9 @@ namespace Flow.Core.Tests.SharedDataAndFixtures.Common.Models;
 [ProtoContract]
 public class Person
 {
-    [ProtoMember(1)] public string  FirstName   { get; } 
-    [ProtoMember(2)] public string  Surname     { get; } 
-    [ProtoMember(3)] public int     Age         { get; } 
+    [ProtoMember(1)] public string FirstName    { get; } = default!; 
+    [ProtoMember(2)] public string  Surname     { get; } = default!;
+    [ProtoMember(3)] public int     Age         { get; } = default!;
 
     private Person() { }//for protobuf-net
 
