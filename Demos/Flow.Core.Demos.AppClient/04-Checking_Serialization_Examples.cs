@@ -128,7 +128,12 @@ public class Checking_Serialization_Examples
 
         Console.WriteLine($"Custom failure json string (note the $type discriminator): {jsonString}\r\n");
 
-        clonedFailure.Match(failure => Console.WriteLine($"Cloned custom failure content: {failure}\r\n"), success => Console.WriteLine(success));
+        clonedFailure.Match((failure =>
+        {
+            var notApproved = (failure as NotApprovedFailure)!;
+            Console.WriteLine($"Cloned custom not approved failure - Reason: {notApproved.Reason} - Rejected by: {notApproved.RejectedBy}");
+
+        }), success => Console.WriteLine(success));
     }
 
     public void CustomFailuresViaGrpcExample()
@@ -155,9 +160,14 @@ public class Checking_Serialization_Examples
 
         var failedPersonFlow = Flow<Person>.Failed(notApprovedFailure);
 
-        Flow<Person> clonedFailure = ProtoBuf.Serializer.DeepClone<Flow<Person>>(failedPersonFlow);   
-              
-        clonedFailure.Match(failure => Console.WriteLine($"Cloned custom failure content: {failure}\r\n"), success => Console.WriteLine(success));
+        Flow<Person> clonedFailure = ProtoBuf.Serializer.DeepClone<Flow<Person>>(failedPersonFlow);
+
+        clonedFailure.Match((failure =>
+        {
+            var notApproved = (failure as NotApprovedFailure)!;
+            Console.WriteLine($"Cloned custom not approved failure - Reason: {notApproved.Reason} - Rejected by: {notApproved.RejectedBy}");
+
+        }), success => Console.WriteLine(success));
     }
 
 }

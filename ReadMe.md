@@ -6,7 +6,7 @@
 
 -->
 <h1>
-<img src="https://raw.github.com/code-dispenser/Flow/main/Assets/icon-64.png" align="center" alt="flow icon" /> Flow - not uploaded to nuget yet!
+<img src="https://raw.github.com/code-dispenser/Flow/main/Assets/icon-64.png" align="center" alt="flow icon" /> Flow
 </h1>
 <!--
 # ![icon](https://raw.githubusercontent.com/code-dispenser/Flow/main/Assets/icon-64.png) Flow 
