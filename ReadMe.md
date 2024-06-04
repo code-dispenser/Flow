@@ -50,6 +50,7 @@ Flow<int> implicitFlowFailure = new Failure.ApplicationFailure("Some reason for 
 public Flow<int> SomeFlowReturningMethod() => 42;
 
 ```
+
 **Note:** For methods that don't return a Flow but you want the result of the method to initiate the flow, you can also use the extension method 'Then'. This extension passes the T value to the flow returning func parameter.
 ```c#
 public int NumberFunction(int value) => value + 10;
@@ -117,9 +118,10 @@ craftyFlowOutput = craftyFlow.OnSuccess(success => Console.WriteLine(success))//
 Console.WriteLine($"The value to use is: {craftyFlowOutput}");
 
 ```
+
 As a further example from the demo, although just a simple example, it is the complete process / flow, from the client using a client side service, calling the server via gRPC code first, that uses a query handler
 class to query a database, and return the results. Known / anticipated errors would be converted to a Failure and the flow returned as normal.
-```
+```c#
 var searchResults = await NetworkingUtility
                             .HasInternetConnection(alwaysOn: false)// just a flag in the demo to cause random failures
                                 .OnSuccess(_ => _customerService.CustomerSearch("Al"))
@@ -159,6 +161,7 @@ public class CustomerSearchQueryHandler(CustomersDbReadOnly readOnlyDB, IDbExcep
 ```
 
 ## Extension methods and utility class FlowHandler
+
 ```c#
 using Flow.Core.Areas.Extensions
 using Flow.Core.Areas.Utilities;
@@ -248,9 +251,8 @@ The following derived failure types are available for use:
 
 ## Acknowledgments
 
-This library uses the attributes from the [protobuf-net](https://www.nuget.org/packages/protobuf-net) package to enable flow to be serialized using ProtoBuf code first. 
+This library uses the attributes from the [protobuf-net](https://www.nuget.org/packages/protobuf-net) package to enable flow to be serialized using ProtoBuf gRPC code-first. 
 Many thanks to Marc Gravell and the contributors who work on that project. 
-project/nuget package.
 
 
 <img src="https://raw.githubusercontent.com/code-dispenser/Flow/main/Assets/icon-64.png" align="middle" height="32px" alt="Flow icon" />

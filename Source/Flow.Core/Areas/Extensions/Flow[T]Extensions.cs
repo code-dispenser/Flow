@@ -2,6 +2,10 @@
 
 namespace Flow.Core.Areas.Extensions;
 
+/// <summary>
+/// Extension methods that basically wrap the Map, Bind and Match method on the <see cref="Flow{T}"/> class,
+/// enabling a more fluent, declarative approach. 
+/// </summary>
 public static class FlowExtensions
 {
 
