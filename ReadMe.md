@@ -1,10 +1,9 @@
 [![.NET](https://github.com/code-dispenser/Flow/actions/workflows/buildandtest.yml/badge.svg?branch=main)](https://github.com/code-dispenser/Flow/actions/workflows/buildandtest.yml) [![Coverage Status](https://coveralls.io/repos/github/code-dispenser/Flow/badge.svg?branch=main)](https://coveralls.io/github/code-dispenser/Flow?branch=main) 
-<!-- [![Nuget download][download-image]][download-url]
+[![Nuget download][download-image]][download-url]
 
-[download-image]: https://img.shields.io/nuget/dt/Conditionals.Core
-[download-url]: https://www.nuget.org/packages/Conditionals.Core
+[download-image]: https://img.shields.io/nuget/dt/Flow.Core
+[download-url]: https://www.nuget.org/packages/Flow.Core
 
--->
 <h1>
 <img src="https://raw.github.com/code-dispenser/Flow/main/Assets/icon-64.png" align="center" alt="flow icon" /> Flow
 </h1>
@@ -25,6 +24,18 @@ This allows for the seamless flow of results across client-server boundaries usi
 processes to work as intended.
 
 The demo project included in the repository's [source code](https://github.com/code-dispenser/Flow) shows examples of custom classes being attributed to ensure serialization/deserialization with either protobuf-net or JSON.
+
+**Note:** For flows that do not require a return value you can use the **None** type available within the library.
+```C#
+using Flow.Core.Areas.Returns;
+using Flow.Core.Common.Models;
+
+Flow<None> successFlow = Flow<None>.Success();
+/*
+    *or using the implicit operator
+*/
+Flow<None> successFlow = None.Value;
+```
 
 ## Installation
 
