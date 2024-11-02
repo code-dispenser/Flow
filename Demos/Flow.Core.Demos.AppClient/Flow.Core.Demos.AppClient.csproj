@@ -12,8 +12,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
-    <PackageReference Include="protobuf-net.Grpc" Version="1.1.1" />
-    <PackageReference Include="protobuf-net.Grpc.ClientFactory" Version="1.1.1" />
+    <PackageReference Include="protobuf-net.Grpc" Version="1.2.2" />
+    <PackageReference Include="protobuf-net.Grpc.ClientFactory" Version="1.2.2" />
   </ItemGroup>
 
   <ItemGroup>
