@@ -1,4 +1,5 @@
 ﻿using ProtoBuf;
+using System.Text.Json.Serialization;
 
 namespace Flow.Core.Common.Models;
 
@@ -13,6 +14,8 @@ public sealed record None
     /// </summary>
     [ProtoMember(1)]
     public static None Value { get; } = new();
+
+    [JsonConstructor()]
     private None() { }
     /// <summary>
     /// Returns a string representation of the None value, 

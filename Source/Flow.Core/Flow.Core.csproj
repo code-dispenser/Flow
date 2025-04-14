@@ -13,7 +13,7 @@
 	<Description>Flow is a lightweight monadic result type that encapsulates the outcome of an operation, returning either a success or failure value. Designed for seamless integration, Flow and its associated failure classes are attributed for both gRPC code-first and System.Text.Json serialization.</Description>
     <PackageTags>operation result; monad; functional; method chaining; fluent</PackageTags>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-	<GeneratePackageOnBuild>False</GeneratePackageOnBuild>    
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>    
 	<PackageReadmeFile>ReadMe.md</PackageReadmeFile>	
 	<PackageIcon>icon-64.png</PackageIcon>	  
 	<FileVersion>2.0.0</FileVersion>
