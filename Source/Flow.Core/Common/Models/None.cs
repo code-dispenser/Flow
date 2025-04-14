@@ -3,17 +3,17 @@
 namespace Flow.Core.Common.Models;
 
 /// <summary>
-/// Represents the absence of a value. 
+/// The singleton instance of the None type.
 /// </summary>
 [ProtoContract]
-public readonly record struct None
+public sealed record None
 {
     /// <summary>
-    /// The singleton instance of the None type.
+    /// Gets the singleton instance of the <see cref="None"/> type.
     /// </summary>
     [ProtoMember(1)]
-    public static None Value { get; } = new None();
-
+    public static None Value { get; } = new();
+    private None() { }
     /// <summary>
     /// Returns a string representation of the None value, 
     /// which is currently set to the Ø (empty set) symbol.
