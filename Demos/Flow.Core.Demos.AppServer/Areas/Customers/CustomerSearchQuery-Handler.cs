@@ -15,12 +15,12 @@ public class CustomerSearchQueryHandler(CustomersDbReadOnly readOnlyDB, IDbExcep
     private readonly CustomersDbReadOnly _readOnlyDB        = readOnlyDB;
     private readonly IDbExceptionHandler _exceptionHandler  = exceptionHandler;
 
-    public Task<Flow<IEnumerable<CustomerSearchResult>>> Handle(CustomerSearchQuery searchCriteria)
+    public async Task<Flow<IEnumerable<CustomerSearchResult>>> Handle(CustomerSearchQuery searchCriteria)
         /*
             * Utility helper within the Flow library so you can wrap method content in a try catch that returns a flow
             * Using an injected handler specific to database exceptions for the entire app. You could have specific global handlers for file input, messaging etc
          */ 
-        => FlowHandler.TryToFlow
+        => await FlowHandler.TryToFlow
             (
                 async () => await _readOnlyDB.Customers.Where(c => c.CompanyName.Contains(searchCriteria.companyName)).Select(Customer.ProjectToCustomerSearchResult).ToListAsync(),
                 exception => _exceptionHandler.Handle<IEnumerable<CustomerSearchResult>>(exception)
