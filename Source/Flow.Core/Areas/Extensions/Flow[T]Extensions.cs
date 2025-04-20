@@ -92,7 +92,7 @@ public static class FlowExtensions
     /// <returns>A task representing the asynchronous operation that returns a new flow with the transformed success value or the original failure value.</returns>
     public static async Task<Flow<TOut>> OnSuccess<TIn, TOut>(this Flow<TIn> thisFlow, Func<TIn, Task<Flow<TOut>>> onSuccess)
 
-        => await thisFlow.Bind(success => onSuccess(success));
+        => await thisFlow.Bind(success => onSuccess(success)).ConfigureAwait(false);
 
 
     /// <summary>
@@ -235,6 +235,39 @@ public static class FlowExtensions
 
         return awaitedFlow;
     }
+
+
+    /// <summary>
+    ///     Transforms the failure value of the flow if it is a failure, using the specified mapping function. If the flow is successful, it is returned unchanged.
+    /// </summary>
+    /// <param name="thisFlow">The current flow instance.</param>
+    /// <param name="onFailure">A function to transform the failure instance.</param>
+    /// <typeparam name="T">The value type of the flow.</typeparam>
+    /// <returns>
+    ///     A flow containing the transformed failure if the original flow was a failure; otherwise, the original successful flow.
+    /// </returns>
+    public static Flow<T> OnFailure<T>(this Flow<T> thisFlow, Func<Failure, Failure> onFailure)
+
+        => thisFlow.Map(onFailure, success => success);
+
+    /// <summary>
+    ///     Transforms the failure value of the flow if the awaited flow is a failure, using the specified mapping function. If the flow is successful, it is returned unchanged.
+    /// </summary>
+    /// <param name="thisFlow">The task representing the asynchronous flow operation.</param>
+    /// <param name="onFailure">A function to transform the failure instance.</param>
+    /// <typeparam name="T">The value type of the flow.</typeparam>
+    /// <returns>
+    ///     A task that represents the asynchronous operation, containing a new failed flow if the original flow was a failure; otherwise, the original successful flow.
+    /// </returns>
+    /// <remarks>
+    ///     This overload allows modification of a failed flow's failure value without introducing asynchronous behavior into the mapping function. The success value is left untouched.
+    /// </remarks>
+    public static async Task<Flow<T>> OnFailure<T>(this Task<Flow<T>> thisFlow, Func<Failure, Failure> onFailure)
+
+        => (await thisFlow.ConfigureAwait(false)).Map(onFailure, success => success);
+
+
+
     #endregion
 
     #region ReturnAs

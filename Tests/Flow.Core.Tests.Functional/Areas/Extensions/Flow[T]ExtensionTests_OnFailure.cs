@@ -1,6 +1,7 @@
 ﻿using Flow.Core.Areas.Extensions;
 using Flow.Core.Areas.Returns;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Xunit.Sdk;
 
 namespace Flow.Core.Tests.Functional.Areas.Extensions;
@@ -48,6 +49,28 @@ public class Flow_ExtensionTests_OnFailure
 
 
     [Fact]
+    public void Should_be_able_to_transform_the_failure_value_if_its_a_failed_flow()
+    {
+        var failure = Flow<int>.Failed(new Failure.ApplicationFailure("Some failure"))
+                                        .OnFailure(_ => new Failure.CacheFailure("Cache failure"))
+                                        .Finally(failure => failure, success => new Failure.ApplicationFailure("Some failure"));
+
+        failure.Should().BeOfType<Failure.CacheFailure>();
+
+    }
+    [Fact]
+    public void Should_not_be_able_to_transform_the_failure_value_if_its_a_successful_flow()
+    {
+        var successFlow = Flow<int>.Success(42)
+                                .OnFailure(_ => new Failure.CacheFailure("Cache failure"));
+
+        successFlow.Should().Match<Flow<int>>(r => r.IsSuccess == true);
+
+    }
+
+
+
+    [Fact]
     public async Task A_failed_flow_task_should_invoke_the_on_failure_action_and_return_the_current_flow_instance()
     {
         var expectedFailure = new Failure.ApplicationFailure("Some failure");
@@ -81,7 +104,7 @@ public class Flow_ExtensionTests_OnFailure
         var successValue = 42;
 
         var awaitedFlow = await Task.FromResult(Flow<int>.Success(42))
-                                        .OnFailure(failure =>
+                                        .OnFailure(act_onFailure: failure =>
                                         {
                                             throw new XunitException("Should not be a failure");
                                         });
@@ -103,5 +126,43 @@ public class Flow_ExtensionTests_OnFailure
 
         awaitedFlow.Match(failure => failure, success => throw new XunitException("Should not be a success"))
                         .Should().Be(expectedFailure);
+    }
+
+    [Fact]
+    public async Task A_failed_flow_task_should_not_invoke_the_on_failure_task_if_its_a_successful_flow()
+    {
+        var awaitedFlow = await Task.FromResult(Flow<int>.Success(42))
+                                        .OnFailure(async failure =>
+                                        {
+                                            throw new XunitException("Should not be a failure");
+                                        });
+
+        awaitedFlow.Should().Match<Flow<int>>(f => f.IsSuccess);
+    }
+
+    [Fact]
+    public async Task Should_not_be_able_to_transform_the_failure_value_if_its_a_successful_flow_task()
+    {
+        var awaitedFlow = await Task.FromResult(Flow<int>.Success(42)).OnFailure(f => new Failure.ApplicationFailure("Some Failure"));
+
+        awaitedFlow.Should().Match<Flow<int>>(f => f.IsSuccess);
+    }
+
+    [Fact]
+    public async Task Should_be_able_to_transform_a_failure_if_its_a_failed_task()
+    {
+
+        var awaitedFlow = await Task.FromResult(Flow<int>.Failed(new Failure.ApplicationFailure("Some failure")))
+                                           .OnFailure(failure => new Failure.CacheFailure("Cache failure"));
+
+        var awaitedFlowValue = awaitedFlow.Finally(failure => failure, sucess => new Failure.ApplicationFailure("Some failure"));
+
+        using(new AssertionScope())
+        {
+            awaitedFlow.Should().Match<Flow<int>>(f => f.IsFailure);
+            awaitedFlowValue.Should().BeOfType<Failure.CacheFailure>();
+        }
+
+
     }
 }
