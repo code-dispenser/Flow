@@ -132,9 +132,9 @@ public class Flow_ExtensionTests_OnFailure
     public async Task A_failed_flow_task_should_not_invoke_the_on_failure_task_if_its_a_successful_flow()
     {
         var awaitedFlow = await Task.FromResult(Flow<int>.Success(42))
-                                        .OnFailure(async failure =>
+                                        .OnFailure(failure =>
                                         {
-                                            throw new XunitException("Should not be a failure");
+                                             return Task.Run(() => throw new XunitException("Should not be a failure"));
                                         });
 
         awaitedFlow.Should().Match<Flow<int>>(f => f.IsSuccess);
