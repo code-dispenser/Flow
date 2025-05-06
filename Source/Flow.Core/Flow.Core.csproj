@@ -8,7 +8,6 @@
 	<AssemblyOriginatorKeyFile>..\..\Assets\FlowKey.snk</AssemblyOriginatorKeyFile>
 	<PackageLicenseFile>License.txt</PackageLicenseFile>
 	<Title>Flow</Title>
-	<Version>2.1.0</Version>
 	<Authors>Paul Kent</Authors>
 	<Description>Flow is a lightweight monadic result type that encapsulates the outcome of an operation, returning either a success or failure value. Designed for seamless integration, Flow and its associated failure classes are attributed for both gRPC code-first and System.Text.Json serialization.</Description>
     <PackageTags>operation result; monad; functional; method chaining; fluent</PackageTags>
@@ -16,12 +15,12 @@
 	<GeneratePackageOnBuild>False</GeneratePackageOnBuild>    
 	<PackageReadmeFile>ReadMe.md</PackageReadmeFile>	
 	<PackageIcon>icon-64.png</PackageIcon>	  
-	<FileVersion>2.1.0</FileVersion>
+	<FileVersion>2.1.1</FileVersion>
 	<Copyright>Copyright (c) 2024 Paul Kent.</Copyright>
-	<PackageVersion>2.1.0</PackageVersion>
-	<AssemblyVersion>2.1.0</AssemblyVersion>
-	<InformationalVersion>2.1.0</InformationalVersion>
-	<Version>2.1.0</Version>	  
+	<PackageVersion>2.1.1</PackageVersion>
+	<AssemblyVersion>2.1.1</AssemblyVersion>
+	<InformationalVersion>2.1.1</InformationalVersion>
+	<Version>2.1.1</Version>	  
     <RepositoryUrl>https://github.com/code-dispenser/Flow</RepositoryUrl>	  
 	<PackageProjectUrl>https://github.com/code-dispenser/Flow</PackageProjectUrl>
 	<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -29,7 +28,7 @@
 	<EmbedUntrackedSources>true</EmbedUntrackedSources>
 	<DebugType>embedded</DebugType>
 	<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-	<PackageReleaseNotes>Added new overloads to the OnFailure extension to transform the failure type or value in a failed flow.</PackageReleaseNotes>
+	<PackageReleaseNotes>Added another OnSuccess extension to execute an async action if the flow is successful, which then returns original flow.</PackageReleaseNotes>
 	  
   </PropertyGroup>
 

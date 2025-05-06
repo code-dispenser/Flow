@@ -119,11 +119,26 @@ public static class FlowExtensions
     {
         var awaitedFlow = await thisFlow.ConfigureAwait(false);
 
-        awaitedFlow.Match(_ => { }, success => act_onSuccess(success));
+        awaitedFlow.Match(act_onFailure: _ => { }, success => act_onSuccess(success));
 
         return awaitedFlow;
     }
 
+    /// <summary>
+    /// Executes the specified async action if the task flow is successful.
+    /// </summary>
+    /// <typeparam name="T">The type of the flow value.</typeparam>
+    /// <param name="thisFlow">The task representing the input flow.</param>
+    /// <param name="onSuccess">The async action to execute if the flow is successful.</param>
+    /// <returns>A task representing the asynchronous operation that returns the original flow.</returns>
+    public static async Task<Flow<T>> OnSuccess<T>(this Task<Flow<T>> thisFlow, Func<T, Task> onSuccess)
+    {
+        var awaitedFlow = await thisFlow.ConfigureAwait(false);
+
+        await awaitedFlow.Match(_ => Task.CompletedTask, onSuccess: onSuccess).ConfigureAwait(false);
+
+        return awaitedFlow;
+    }
 
     #endregion
 
@@ -218,7 +233,6 @@ public static class FlowExtensions
 
         return awaitedFlow;
     }
-
 
     /// <summary>
     /// Executes the specified asynchronous function if the task flow is a failure.
