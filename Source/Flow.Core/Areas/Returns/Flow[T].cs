@@ -69,22 +69,22 @@ public class Flow<T>
         
         => new Flow<T>(successValue);
 
-    
+
     /// <summary>
-    /// Creates a new success <see cref="Flow{None}"/> instance with no value.
+    /// Creates a <see cref="Flow{None}"/> representing a successful result with no meaningful return value.
     /// </summary>
-    /// <returns>A new success <see cref="Flow{None}"/> instance.</returns>
+    /// <returns>A successful <see cref="Flow{None}"/> containing <see cref="None.Value"/>.</returns>
     public static Flow<None> Success()  
         
         => new Flow<None>(None.Value);
 
 
     /// <summary>
-    /// Creates a new failure <see cref="Flow{T}"/> instance.
+    /// Creates a <see cref="Flow{T}"/> representing a failure with the specified failure value.
     /// </summary>
-    /// <param name="failureValue">The failure value.</param>
-    /// <returns>A new failure <see cref="Flow{T}"/> instance.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if the failureValue is null.</exception>
+    /// <param name="failureValue">The failure detail to encapsulate.</param>
+    /// <returns>A <see cref="Flow{T}"/> indicating failure.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="failureValue"/> is null.</exception>
     public static Flow<T>  Failed(Failure failureValue) 
         
         => new Flow<T>(default, failureValue);
@@ -122,7 +122,7 @@ public class Flow<T>
 
 
     /// <summary>
-    /// Executes one of the provided actions based on whether the flow is successful or failed.
+    /// Executes the specified action depending on whether the flow is a success or a failure.
     /// </summary>
     /// <param name="act_onFailure">Action to execute if the flow is a failure.</param>
     /// <param name="act_onSuccess">Action to execute if the flow is a success.</param>

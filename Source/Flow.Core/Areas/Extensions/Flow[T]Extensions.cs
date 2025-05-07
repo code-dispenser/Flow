@@ -152,7 +152,9 @@ public static class FlowExtensions
     /// <param name="thisFlow">The task representing the input flow.</param>
     /// <param name="operationToTry">The asynchronous operation to try on the success value.</param>
     /// <param name="exceptionHandler">The function to handle any exceptions that occur.</param>
-    /// <returns>A task representing the asynchronous operation that returns a new flow with the result of the operation or the handled exception.</returns>
+    /// <returns>
+    /// A task representing the asynchronous operation that returns a new flow with the result of the operation or the handled exception.
+    /// </returns>
     public static async Task<Flow<TOut>> OnSuccessTry<TIn, TOut>(this Task<Flow<TIn>> thisFlow, Func<TIn, Task<Flow<TOut>>> operationToTry, Func<Exception, Flow<TOut>> exceptionHandler)
     {
         try
@@ -163,14 +165,14 @@ public static class FlowExtensions
     }
 
     /// <summary>
-    /// Tries to perform an operation on the success value of a flow, handling any exceptions.
+    /// Attempts to transform the success value using the specified function, returning a failure if an exception occurs.
     /// </summary>
     /// <typeparam name="TIn">The type of the input flow value.</typeparam>
-    /// <typeparam name="TOut">The type of the output flow value.</typeparam>
-    /// <param name="thisFlow">The input flow.</param>
-    /// <param name="operationToTry">The operation to try on the success value.</param>
-    /// <param name="exceptionHandler">The function to handle any exceptions that occur.</param>
-    /// <returns>A new flow with the result of the operation or the handled exception.</returns>
+    /// <typeparam name="TOut">The type of the resulting flow value.</typeparam>
+    /// <param name="thisFlow">The flow to transform if successful.</param>
+    /// <param name="operationToTry">The function to apply to the success value.</param>
+    /// <param name="exceptionHandler">A function that returns a failure flow if an exception occurs.</param>
+    /// <returns>A transformed flow if successful; otherwise, a failure flow.</returns>
     public static Flow<TOut> OnSuccessTry<TIn, TOut>(this Flow<TIn> thisFlow, Func<TIn, Flow<TOut>> operationToTry, Func<Exception, Flow<TOut>> exceptionHandler)
     {
         try
