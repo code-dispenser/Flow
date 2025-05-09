@@ -56,6 +56,10 @@ public class Failure__SerializationTests_Protobuf
     [InlineData(nameof(Failure.InternetConnectionFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
     [InlineData(nameof(Failure.CacheFailure), "Reason for failure", null, 0, false, null, null)]
     [InlineData(nameof(Failure.CacheFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
+    [InlineData(nameof(Failure.JsonFailure), "Reason for failure", null, 0, false, null, null)]
+    [InlineData(nameof(Failure.JsonFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
+    [InlineData(nameof(Failure.GrpcFailure), "Reason for failure", null, 0, false, null, null)]
+    [InlineData(nameof(Failure.GrpcFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
     [InlineData(nameof(Failure.UnknownFailure), "Reason for failure", null, 0, false, null, null)]
     [InlineData(nameof(Failure.UnknownFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
     public void Should_be_able_to_serialize_and_deserialize_the_failure_using_protobuf_net_serializer(string typeName, string? reason, string? details, int subTypeID, bool canRetry, string? exceptionMessage, string? occurredAtString)

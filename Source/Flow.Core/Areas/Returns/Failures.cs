@@ -33,6 +33,9 @@ namespace Flow.Core.Areas.Returns;
 [JsonDerivedType(typeof(TaskCancellationFailure), 119)]
 [JsonDerivedType(typeof(InternetConnectionFailure), 120)]
 [JsonDerivedType(typeof(CacheFailure), 121)]
+[JsonDerivedType(typeof(JsonFailure), 122)]
+[JsonDerivedType(typeof(GrpcFailure), 123)]
+
 [JsonDerivedType(typeof(UnknownFailure), 199)]
 
 [ProtoContract]
@@ -48,6 +51,7 @@ namespace Flow.Core.Areas.Returns;
     ProtoInclude(116, typeof(IOFailure)), ProtoInclude(117, typeof(HardwareFailure)),
     ProtoInclude(118, typeof(SystemFailure)), ProtoInclude(119, typeof(TaskCancellationFailure)),
     ProtoInclude(120, typeof(InternetConnectionFailure)), ProtoInclude(121, typeof(CacheFailure)),
+    ProtoInclude(122, typeof(JsonFailure)), ProtoInclude(123, typeof(GrpcFailure)),
     ProtoInclude(199, typeof(UnknownFailure))
 
 ]
@@ -426,6 +430,34 @@ public abstract class Failure
         /// <inheritdoc/>
         [JsonConstructor()]
         public CacheFailure(string reason, Dictionary<string, string>? details = null, int subTypeID = 0, bool canRetry = false, Exception? exception = null, DateTime? occurredAt = null)
+            : base(reason, details, subTypeID, canRetry, exception, occurredAt) { }
+    }
+
+    /// <summary>
+    /// Represents a Json Serialisaion or Deserialisaion failure.
+    /// </summary>
+    [ProtoContract]
+    public sealed class JsonFailure : Failure
+    {
+        private JsonFailure() : base("", [], 0, false, null, null) { }
+
+        /// <inheritdoc/>
+        [JsonConstructor()]
+        public JsonFailure(string reason, Dictionary<string, string>? details = null, int subTypeID = 0, bool canRetry = false, Exception? exception = null, DateTime? occurredAt = null)
+            : base(reason, details, subTypeID, canRetry, exception, occurredAt) { }
+    }
+    
+    /// <summary>
+    /// Represents a Grpc Serialisaion or Deserialisaion failure.
+    /// </summary>
+    [ProtoContract]
+    public sealed class GrpcFailure : Failure
+    {
+        private GrpcFailure() : base("", [], 0, false, null, null) { }
+
+        /// <inheritdoc/>
+        [JsonConstructor()]
+        public GrpcFailure(string reason, Dictionary<string, string>? details = null, int subTypeID = 0, bool canRetry = false, Exception? exception = null, DateTime? occurredAt = null)
             : base(reason, details, subTypeID, canRetry, exception, occurredAt) { }
     }
 
