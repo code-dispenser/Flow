@@ -254,6 +254,8 @@ The following derived failure types are available for use:
 * TaskCancellationFailure
 * InternetConnectionFailure
 * CacheFailure
+* JsonFailure
+* GrpcFailure
 
 * ***UnknownFailure*** - has been given a type discriminator of 199 to allow for additional types to be added to the library. Your custom failures, if serialized will need a value greater than 199 for its type discriminator. The same values have been assigned to both the JsonDerivedType and ProtoInclude attributes.
 
