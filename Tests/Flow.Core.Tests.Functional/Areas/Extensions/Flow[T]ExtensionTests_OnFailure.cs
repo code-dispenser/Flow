@@ -155,7 +155,7 @@ public class Flow_ExtensionTests_OnFailure
         var awaitedFlow = await Task.FromResult(Flow<int>.Failed(new Failure.ApplicationFailure("Some failure")))
                                            .OnFailure(failure => new Failure.CacheFailure("Cache failure"));
 
-        var awaitedFlowValue = awaitedFlow.Finally(failure => failure, sucess => new Failure.ApplicationFailure("Some failure"));
+        var awaitedFlowValue = awaitedFlow.Finally(failure => failure, success => new Failure.ApplicationFailure("Some failure"));
 
         using(new AssertionScope())
         {

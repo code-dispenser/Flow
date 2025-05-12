@@ -6,7 +6,7 @@ namespace Flow.Core.Areas.Extensions;
 /// Extension methods that basically wrap the Map, Bind and Match method on the <see cref="Flow{T}"/> class,
 /// enabling a more fluent, declarative approach. 
 /// </summary>
-public static class FlowExtensions
+public static partial class FlowExtensions
 {
 
     #region Then Methods
@@ -142,46 +142,7 @@ public static class FlowExtensions
 
     #endregion
 
-    #region OnSuccessTry Methods
 
-    /// <summary>
-    /// Tries to perform an asynchronous operation on the success value of a task flow, handling any exceptions.
-    /// </summary>
-    /// <typeparam name="TIn">The type of the input flow value.</typeparam>
-    /// <typeparam name="TOut">The type of the output flow value.</typeparam>
-    /// <param name="thisFlow">The task representing the input flow.</param>
-    /// <param name="operationToTry">The asynchronous operation to try on the success value.</param>
-    /// <param name="exceptionHandler">The function to handle any exceptions that occur.</param>
-    /// <returns>
-    /// A task representing the asynchronous operation that returns a new flow with the result of the operation or the handled exception.
-    /// </returns>
-    public static async Task<Flow<TOut>> OnSuccessTry<TIn, TOut>(this Task<Flow<TIn>> thisFlow, Func<TIn, Task<Flow<TOut>>> operationToTry, Func<Exception, Flow<TOut>> exceptionHandler)
-    {
-        try
-        {
-            return await (await thisFlow.ConfigureAwait(false)).Bind<TOut>(operationToTry).ConfigureAwait(false);
-        }
-        catch (Exception ex) { return exceptionHandler(ex); }
-    }
-
-    /// <summary>
-    /// Attempts to transform the success value using the specified function, returning a failure if an exception occurs.
-    /// </summary>
-    /// <typeparam name="TIn">The type of the input flow value.</typeparam>
-    /// <typeparam name="TOut">The type of the resulting flow value.</typeparam>
-    /// <param name="thisFlow">The flow to transform if successful.</param>
-    /// <param name="operationToTry">The function to apply to the success value.</param>
-    /// <param name="exceptionHandler">A function that returns a failure flow if an exception occurs.</param>
-    /// <returns>A transformed flow if successful; otherwise, a failure flow.</returns>
-    public static Flow<TOut> OnSuccessTry<TIn, TOut>(this Flow<TIn> thisFlow, Func<TIn, Flow<TOut>> operationToTry, Func<Exception, Flow<TOut>> exceptionHandler)
-    {
-        try
-        {
-            return thisFlow.Bind<TOut>(operationToTry);
-        }
-        catch (Exception ex) { return exceptionHandler(ex); }
-    }
-    #endregion
 
     #region OnFailure Methods
 
@@ -282,81 +243,6 @@ public static class FlowExtensions
 
         => (await thisFlow.ConfigureAwait(false)).Map(onFailure, success => success);
 
-
-
-    #endregion
-
-    #region ReturnAs
-
-    /// <summary>
-    /// Transforms both the success and failure values of a flow using the specified functions.
-    /// </summary>
-    /// <typeparam name="TIn">The type of the input flow value.</typeparam>
-    /// <typeparam name="TOut">The type of the output flow value.</typeparam>
-    /// <param name="thisFlow">The input flow.</param>
-    /// <param name="onFailure">The function to transform the failure value.</param>
-    /// <param name="onSuccess">The function to transform the success value.</param>
-    /// <returns>A new flow with the transformed success or failure value.</returns>
-    public static Flow<TOut> ReturnAs<TIn, TOut>(this Flow<TIn> thisFlow, Func<Failure, Failure> onFailure, Func<TIn, TOut> onSuccess)
-
-        => thisFlow.Map(onFailure, onSuccess);
-
-
-    /// <summary>
-    /// Transforms both the success and failure values of a task flow using the specified functions.
-    /// </summary>
-    /// <typeparam name="TIn">The type of the input flow value.</typeparam>
-    /// <typeparam name="TOut">The type of the output flow value.</typeparam>
-    /// <param name="thisFlow">The task representing the input flow.</param>
-    /// <param name="onFailure">The function to transform the failure value.</param>
-    /// <param name="onSuccess">The function to transform the success value.</param>
-    /// <returns>A task representing the asynchronous operation that returns a new flow with the transformed success or failure value.</returns>
-    public static async Task<Flow<TOut>> ReturnAs<TIn, TOut>(this Task<Flow<TIn>> thisFlow, Func<Failure, Failure> onFailure, Func<TIn, TOut> onSuccess)
-
-        => (await thisFlow.ConfigureAwait(false)).Map(onFailure, onSuccess);
-
-
-    /// <summary>
-    /// Transforms the success value of a task flow using the specified function.
-    /// </summary>
-    /// <typeparam name="TIn">The type of the input flow value.</typeparam>
-    /// <typeparam name="TOut">The type of the output flow value.</typeparam>
-    /// <param name="thisFlow">The task representing the input flow.</param>
-    /// <param name="onSuccess">The function to transform the success value.</param>
-    /// <returns>A task representing the asynchronous operation that returns a new flow with the transformed success value.</returns>
-    public static async Task<Flow<TOut>> ReturnAs<TIn, TOut>(this Task<Flow<TIn>> thisFlow, Func<TIn, TOut> onSuccess)
-
-        => (await thisFlow.ConfigureAwait(false)).Map(onSuccess);
-
-    #endregion
-
-    #region Finally Methods
-
-    /// <summary>
-    /// Executes one of the specified functions based on whether the flow is a success or a failure.
-    /// </summary>
-    /// <typeparam name="TIn">The type of the input flow value.</typeparam>
-    /// <typeparam name="TOut">The type of the output value.</typeparam>
-    /// <param name="thisFlow">The input flow.</param>
-    /// <param name="onFailure">The function to execute if the flow is a failure.</param>
-    /// <param name="onSuccess">The function to execute if the flow is a success.</param>
-    /// <returns>The result of the executed function.</returns>
-    public static TOut Finally<TIn, TOut>(this Flow<TIn> thisFlow, Func<Failure, TOut> onFailure, Func<TIn, TOut> onSuccess)
-
-        => thisFlow.Match(onFailure, onSuccess);
-
-    /// <summary>
-    /// Executes one of the specified functions based on whether the task flow is a success or a failure.
-    /// </summary>
-    /// <typeparam name="TIn">The type of the input flow value.</typeparam>
-    /// <typeparam name="TOut">The type of the output value.</typeparam>
-    /// <param name="thisFlow">The task representing the input flow.</param>
-    /// <param name="onFailure">The function to execute if the flow is a failure.</param>
-    /// <param name="onSuccess">The function to execute if the flow is a success.</param>
-    /// <returns>A task representing the asynchronous operation that returns the result of the executed function.</returns>
-    public static async Task<TOut> Finally<TIn, TOut>(this Task<Flow<TIn>> thisFlow, Func<Failure, TOut> onFailure, Func<TIn, TOut> onSuccess)
-
-        => (await thisFlow.ConfigureAwait(false)).Match(onFailure, onSuccess);
 
 
     #endregion

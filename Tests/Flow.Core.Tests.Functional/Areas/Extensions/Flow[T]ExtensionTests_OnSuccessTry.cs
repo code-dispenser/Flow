@@ -89,4 +89,95 @@ public class Flow_ExtensionTests_OnSuccessTry
         }
 
     }
+
+
+
+    [Fact]
+    public void On_success_try_should_execute_the_function_and_return_the_result_in_a_flow()
+    {
+        var successFlow = Flow<None>.Success()
+                                    .OnSuccessTry(_ => 42, exception => this.ExceptionHandler<int>(exception));
+
+        using (new AssertionScope())
+        {
+            successFlow.Match(failure => 0, success => success).Should().Be(42);
+            successFlow.Should().Match<Flow<int>>(r => r.IsSuccess == true);
+        }
+    }
+    [Fact]
+    public void On_success_try_should_not_execute_the_function_and_return_the_current_flow_if_its_failed()
+    {
+        var successFlow = Flow<None>.Failed(new Failure.ApplicationFailure("Some failure"))
+                                    .OnSuccessTry(_ => 42, exception => this.ExceptionHandler<int>(exception));
+
+        using (new AssertionScope())
+        {
+            successFlow.Match(failure => failure, success => new Failure.UnknownFailure("Should not be here")).Should().BeOfType<Failure.ApplicationFailure>();
+            successFlow.Should().Match<Flow<int>>(r => r.IsSuccess == false);
+        }
+    }
+
+    [Fact]
+    public void On_success_try_should_execute_the_function_but_use_the_provided_exception_handler_to_return_a_flow_instance()
+    {
+        var successFlow = Flow<None>.Success()
+                                    .OnSuccessTry(success => 
+                                    {
+                                        int x = 1, y = 0;
+                                        return x / y;
+
+                                    },  exception => this.ExceptionHandler<int>(exception));
+
+        using (new AssertionScope())
+        {
+            successFlow.Match(failure => failure, success => new Failure.UnknownFailure("Should not be here")).Should().BeOfType<Failure.ApplicationFailure>();
+            successFlow.Should().Match<Flow<int>>(r => r.IsSuccess == false);
+        }
+    }
+
+
+    [Fact]
+    public async Task On_success_try_should_execute_the_async_function_and_return_the_result_in_a_flow()
+    {
+        var successFlow = await Flow<None>.Success()
+                                    .OnSuccessTry(_ => Task.FromResult(42), exception => this.ExceptionHandler<int>(exception));
+
+        using (new AssertionScope())
+        {
+            successFlow.Match(failure => 0, success => success).Should().Be(42);
+            successFlow.Should().Match<Flow<int>>(r => r.IsSuccess == true);
+        }
+    }
+
+    [Fact]
+    public async Task On_success_try_should_not_execute_the_async_function_and_return_the_current_flow_if_its_failed()
+    {
+        var successFlow = await Flow<None>.Failed(new Failure.ApplicationFailure("Some failure"))
+                                    .OnSuccessTry(success => Task.FromResult(42), exception => this.ExceptionHandler<int>(exception));
+
+        using (new AssertionScope())
+        {
+            successFlow.Match(failure => failure, success => new Failure.UnknownFailure("Should not be here")).Should().BeOfType<Failure.ApplicationFailure>();
+            successFlow.Should().Match<Flow<int>>(r => r.IsSuccess == false);
+        }
+    }
+
+    [Fact]
+    public async Task On_success_try_should_execute_the_async_function_but_use_the_provided_exception_handler_to_return_a_flow_instance()
+    {
+        var successFlow = await Flow<None>.Success()
+                                    .OnSuccessTry(async success =>
+                                    {
+                                        int x = 1, y = 0;
+                                        return await Task.FromResult(x/y);
+
+                                    }, exception => this.ExceptionHandler<int>(exception));
+
+        using (new AssertionScope())
+        {
+            successFlow.Match(failure => failure, success => new Failure.UnknownFailure("Should not be here")).Should().BeOfType<Failure.ApplicationFailure>();
+            successFlow.Should().Match<Flow<int>>(r => r.IsSuccess == false);
+        }
+    }
+
 }
