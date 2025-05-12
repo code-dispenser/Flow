@@ -77,6 +77,85 @@ public class FlowHandlerTests
 
     }
 
+    [Fact]
+    public void try_to_flow_should_execute_the_flow_returning_function()
+    {
+        var successFlow = FlowHandler.TryToFlow<int>(() =>
+        {
+            return Flow<int>.Success(10);
+        }, exception => throw new XunitException("Should not have thrown an exception"));
+
+        using (new AssertionScope())
+        {
+            successFlow.Match(failure => 0, success => success).Should().Be(10);
+            successFlow.Should().Match<Flow<int>>(r => r.IsSuccess == true);
+        }
+
+    }
+
+    [Fact]
+    public void try_to_flow_should_execute_the_flow_returning_function_and_use_the_provided_exception_handler_returning_a_flow_instance()
+    {
+        var failureMessage = "Division exceptions";
+
+        var failedFlow = FlowHandler.TryToFlow<int>(() =>
+        {
+            int x = 10;
+            int y = x / 0;
+            return  Flow<int>.Success(y);
+        }, exception => Flow<int>.Failed(new Failure.ApplicationFailure(failureMessage)));
+
+        using (new AssertionScope())
+        {
+            failedFlow.Match(failure => failure, _ => throw new XunitException("Should not be a success"))
+                        .Should().Match<Failure.ApplicationFailure>(f => f.Reason == failureMessage);
+
+            failedFlow.Should().Match<Flow<int>>(r => r.IsFailure == true);
+        }
+
+    }
+
+    [Fact]
+    public void try_to_flow_should_execute_the_flow_returning_function_and_use_the_provided_exception_handler_method_returning_a_flow_instance()
+    {
+        var failureMessage = "Converted to failure";//assigned in class level handler
+
+        var failedFlow = FlowHandler.TryToFlow<int>(() =>
+        {
+            int x = 10;
+            int y = x / 0;
+            return Flow<int>.Success(y);
+        }, exception => this.ExceptionHandler<int>(exception));
+
+        using (new AssertionScope())
+        {
+            failedFlow.Match(failure => failure, _ => throw new XunitException("Should not be a success"))
+                        .Should().Match<Failure.ApplicationFailure>(f => f.Reason == failureMessage);
+
+            failedFlow.Should().Match<Flow<int>>(r => r.IsFailure == true);
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     [Fact]
     public async Task try_to_flow_should_execute_the_async_function_and_return_a_flow_instance()
