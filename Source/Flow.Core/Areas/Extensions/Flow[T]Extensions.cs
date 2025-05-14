@@ -9,35 +9,6 @@ namespace Flow.Core.Areas.Extensions;
 public static partial class FlowExtensions
 {
 
-    #region Then Methods
-
-    /// <summary>
-    /// Converts an object to a <see cref="Flow{TOut}"/> using the specified function.
-    /// </summary>
-    /// <typeparam name="T">The type of the input object.</typeparam>
-    /// <typeparam name="TOut">The type of the output flow.</typeparam>
-    /// <param name="thisObject">The input object.</param>
-    /// <param name="toFlow">The function to convert the input object to a flow.</param>
-    /// <returns>A new flow of type <typeparamref name="TOut"/>.</returns>
-    public static Flow<TOut> Then<T, TOut>(this T thisObject, Func<T, Flow<TOut>> toFlow)
-        
-        => toFlow(thisObject);
-
-
-    /// <summary>
-    /// Converts a task result to a <see cref="Flow{TOut}"/> using the specified asynchronous function.
-    /// </summary>
-    /// <typeparam name="T">The type of the input object.</typeparam>
-    /// <typeparam name="TOut">The type of the output flow.</typeparam>
-    /// <param name="thisObject">The task representing the input object.</param>
-    /// <param name="toFlow">The asynchronous function to convert the input object to a flow.</param>
-    /// <returns>A task representing the asynchronous operation that returns a new flow of type <typeparamref name="TOut"/>.</returns>
-    public static async Task<Flow<TOut>> Then<T, TOut>(this Task<T> thisObject, Func<T, Task<Flow<TOut>>> toFlow)
-    
-        => await toFlow(await thisObject);
-
-    #endregion
-
 
     #region OnSuccess Methods
 
@@ -148,22 +119,40 @@ public static partial class FlowExtensions
 
 
     /// <summary>
-    /// Transforms the failure value of a flow using the specified function if the flow is a failure.
+    /// Transforms the failure value of a flow using the specified function, if the flow is in a failed state.
     /// </summary>
-    /// <typeparam name="T">The type of the flow value.</typeparam>
+    /// <typeparam name="T">The type of the flow's success value.</typeparam>
     /// <param name="thisFlow">The input flow.</param>
-    /// <param name="onFailure">The function to transform the failure value.</param>
-    /// <returns>A new flow with the transformed failure value or the original success value.</returns>
+    /// <param name="onFailure">The function to transform the failure into a new flow.</param>
+    /// <returns>A new flow resulting from the failure transformation, or the original success flow if no failure occurred.</returns>
     public static Flow<T> OnFailure<T>(this Flow<T> thisFlow, Func<Failure, Flow<T>> onFailure)
-    {
-  
-        var failureValue = thisFlow.Match(failure => failure, success => Failure.CreateNoFailure());
-
-        if (thisFlow.IsSuccess) return thisFlow;//moved from start to here due to code coverage, either that or abuse the match function thisFlow.Match(failure => onFailure(failure), _ => thisFlow);
+   
+        => thisFlow.BindFailure(onFailure);
 
 
-        return onFailure(failureValue);
-    }
+
+    /// <summary>
+    /// Transforms the failure value of a task-based flow using the specified asynchronous function if the flow has failed.
+    /// </summary>
+    /// <typeparam name="T">The type of the flow's success value.</typeparam>
+    /// <param name="thisFlow">The task representing the input flow.</param>
+    /// <param name="onFailure">The asynchronous function to transform the failure value into a new flow.</param>
+    /// <returns>A task representing the asynchronous operation that returns a new flow resulting from the failure transformation, or the original success flow.</returns>
+    public static async Task<Flow<T>> OnFailure<T>(this Task<Flow<T>> thisFlow, Func<Failure, Task<Flow<T>>> onFailure)
+
+        => await (await thisFlow.ConfigureAwait(false)).BindFailure(onFailure).ConfigureAwait(false);
+
+
+    /// <summary>
+    /// Asynchronously transforms the failure value of a flow using the specified function, if the flow is in a failed state.
+    /// </summary>
+    /// <typeparam name="T">The type of the flow's success value.</typeparam>
+    /// <param name="thisFlow">The input flow.</param>
+    /// <param name="onFailure">The asynchronous function to transform the failure into a new flow.</param>
+    /// <returns>A task representing the asynchronous operation that returns a new flow resulting from the failure transformation, or the original success flow if no failure occurred.</returns>
+    public static async Task<Flow<T>> OnFailure<T>(this Flow<T> thisFlow, Func<Failure, Task<Flow<T>>> onFailure)
+        
+        => await thisFlow.BindFailure(onFailure).ConfigureAwait(false);
 
 
     /// <summary>

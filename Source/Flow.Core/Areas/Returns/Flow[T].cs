@@ -202,5 +202,26 @@ public class Flow<T>
         => IsSuccess ? onSuccess(SuccessValue!) : Task.FromResult(Flow<TOut>.Failed(FailureValue));
 
 
+
+    /// <summary>
+    /// Transforms the failure value of the flow using the specified function if the flow is a failure, returning a new flow.
+    /// </summary>
+    /// <param name="onFailure">Function to transform the failure into a new flow.</param>
+    /// <returns>The new flow resulting from the failure transformation function or the original success.</returns>
+    public Flow<T> BindFailure(Func<Failure, Flow<T>> onFailure)
+
+        => IsSuccess ? Flow<T>.Success(SuccessValue!) : onFailure(FailureValue);
+
+
+    /// <summary>
+    /// Transforms the failure value of the flow using the specified asynchronous function if the flow is a failure, returning a new flow.
+    /// </summary>
+    /// <param name="onFailure">Asynchronous function to transform the failure into a new flow.</param>
+    /// <returns>A task representing the asynchronous operation that returns the new flow or the original success.</returns>
+    public Task<Flow<T>> BindFailure(Func<Failure, Task<Flow<T>>> onFailure)
+
+        => IsSuccess ? Task.FromResult(Flow<T>.Success(SuccessValue!)) : onFailure(FailureValue);
+
+
 }
 

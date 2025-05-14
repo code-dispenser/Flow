@@ -308,4 +308,76 @@ public class FlowTests
         }, success => throw new XunitException("Should not be a success"));
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    [Fact]
+    public void BindFailure_should_execute_the_failure_function_when_its_a_failed_flow_returning_the_same_flow_type()
+    {
+        var failureFlow = Flow<int>.Failed(new Failure.ApplicationFailure("Some failure"));
+        var resultFlow  = failureFlow.BindFailure(failure => Flow<int>.Success(42));
+
+        using(new AssertionScope())
+        {
+            resultFlow.Should().BeOfType(failureFlow.GetType());
+
+            resultFlow.Match(failure => throw new XunitException("Should not be a failure"), success => success).Should().Be(42);
+        }
+        
+    }
+    [Fact]
+    public void BindFailure_should_not_execute_the_failure_function_when_its_a_success_flow_and_should_return_the_current_flow()
+    {
+        var successFlow = Flow<int>.Success(42);
+        var resultFlow = successFlow.BindFailure(failure => Flow<int>.Success(24));
+
+        using (new AssertionScope())
+        {
+            resultFlow.Should().BeOfType(successFlow.GetType());
+
+            resultFlow.Match(failure => throw new XunitException("Should not be a failure"), success => success).Should().Be(42);
+        }
+
+    }
+
+
+    [Fact]
+    public async Task BindFailure_should_execute_the_failure_task_function_when_its_a_failed_flow_returning_the_same_flow_type()
+    {
+        var failureFlow = Flow<int>.Failed(new Failure.ApplicationFailure("Some failure"));
+        var resultFlow  = await failureFlow.BindFailure(failure => Task.FromResult(Flow<int>.Success(42)));
+
+        using (new AssertionScope())
+        {
+            resultFlow.Should().BeOfType(failureFlow.GetType());
+
+            resultFlow.Match(failure => throw new XunitException("Should not be a failure"), success => success).Should().Be(42);
+        }
+
+    }
+    [Fact]
+    public async Task BindFailure_should_not_execute_the_failure_task_function_when_its_a_success_flow_and_should_return_the_current_flow()
+    {
+        var successFlow = Flow<int>.Success(42);
+        var resultFlow = await successFlow.BindFailure(async failure => await Task.FromResult(Flow<int>.Success(24)));
+
+        using (new AssertionScope())
+        {
+            resultFlow.Should().BeOfType(successFlow.GetType());
+
+            resultFlow.Match(failure => throw new XunitException("Should not be a failure"), success => success).Should().Be(42);
+        }
+
+    }
 }
