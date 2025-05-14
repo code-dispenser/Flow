@@ -9,9 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.5" />
     <PackageReference Include="protobuf-net.Grpc" Version="1.2.2" />
     <PackageReference Include="protobuf-net.Grpc.ClientFactory" Version="1.2.2" />
   </ItemGroup>
