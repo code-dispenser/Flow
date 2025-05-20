@@ -91,13 +91,21 @@ public class Flow<T>
 
 
     /// <summary>
-    /// Implicit conversion from a successful value to a <see cref="Flow{T}"/> instance.
+    /// Implicitly converts a non-null, non-failure value into a successful <see cref="Flow{T}"/> instance.
     /// </summary>
-    /// <param name="successValue">The success value.</param>
-    /// <returns>A new flow that has succeeded with the specified value.</returns>
-    public static implicit operator Flow<T>(T successValue)         
-        
-        => new Flow<T>(successValue);
+    /// <param name="successValue">
+    /// The value to convert. Must not be <c>null</c>".
+    /// </param>
+    /// <returns>
+    /// A <see cref="Flow{T}"/> representing a success if the value is valid;
+    /// otherwise, a failed <see cref="Flow{T}"/> containing a <see cref="Failure.ConversionFailure"/>.
+    /// </returns>
+    public static implicit operator Flow<T>(T successValue)
+    {
+        if (successValue is null) return Flow<T>.Failed(new Failure.ConversionFailure($"Implicit conversion failed: value cannot be null"));
+
+        return new Flow<T>(successValue);
+    }
 
 
     /// <summary>

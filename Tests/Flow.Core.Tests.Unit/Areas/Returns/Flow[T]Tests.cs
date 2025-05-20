@@ -81,6 +81,21 @@ public class FlowTests
     }
 
     [Fact]
+    public void Implicit_conversion_with_a_null_should_create_a_failed_flow_of_type_conversion_failure()
+    {
+        Flow<string> implicitFlow = ConvertImplicitly(null!);
+
+        static Flow<string> ConvertImplicitly(string value) => value;
+
+        using(new AssertionScope())
+        {
+            implicitFlow.Should().Match<Flow<string>>(f => f.IsSuccess == false && f.IsFailure == true);
+            implicitFlow.Match(failure => failure, success => throw new XunitException("Should not be a success"))
+                           .Should().BeOfType<Failure.ConversionFailure>();
+        }
+    }
+
+    [Fact]
     public void The_internal_json_constructor_should_set_all_properties_correctly()
     {
         var successfulFlow  = new Flow<decimal>(42.0M, Failure.CreateNoFailure(), true);

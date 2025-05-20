@@ -35,6 +35,7 @@ namespace Flow.Core.Areas.Returns;
 [JsonDerivedType(typeof(CacheFailure), 121)]
 [JsonDerivedType(typeof(JsonFailure), 122)]
 [JsonDerivedType(typeof(GrpcFailure), 123)]
+[JsonDerivedType(typeof(ConversionFailure), 124)]
 
 [JsonDerivedType(typeof(UnknownFailure), 199)]
 
@@ -52,7 +53,7 @@ namespace Flow.Core.Areas.Returns;
     ProtoInclude(118, typeof(SystemFailure)), ProtoInclude(119, typeof(TaskCancellationFailure)),
     ProtoInclude(120, typeof(InternetConnectionFailure)), ProtoInclude(121, typeof(CacheFailure)),
     ProtoInclude(122, typeof(JsonFailure)), ProtoInclude(123, typeof(GrpcFailure)),
-    ProtoInclude(199, typeof(UnknownFailure))
+    ProtoInclude(124, typeof(ConversionFailure)), ProtoInclude(199, typeof(UnknownFailure))
 
 ]
 public abstract class Failure
@@ -434,7 +435,7 @@ public abstract class Failure
     }
 
     /// <summary>
-    /// Represents a Json Serialisaion or Deserialisaion failure.
+    /// Represents a Json Serialisation or Deserialisation failure.
     /// </summary>
     [ProtoContract]
     public sealed class JsonFailure : Failure
@@ -448,7 +449,7 @@ public abstract class Failure
     }
     
     /// <summary>
-    /// Represents a Grpc Serialisaion or Deserialisaion failure.
+    /// Represents a Grpc Serialisation or Deserialisation failure.
     /// </summary>
     [ProtoContract]
     public sealed class GrpcFailure : Failure
@@ -460,6 +461,21 @@ public abstract class Failure
         public GrpcFailure(string reason, Dictionary<string, string>? details = null, int subTypeID = 0, bool canRetry = false, Exception? exception = null, DateTime? occurredAt = null)
             : base(reason, details, subTypeID, canRetry, exception, occurredAt) { }
     }
+
+    /// <summary>
+    /// Represents some sort of conversion failure.
+    /// </summary>
+    [ProtoContract]
+    public sealed class ConversionFailure : Failure
+    {
+        private ConversionFailure() : base("", [], 0, false, null, null) { }
+
+        /// <inheritdoc/>
+        [JsonConstructor()]
+        public ConversionFailure(string reason, Dictionary<string, string>? details = null, int subTypeID = 0, bool canRetry = false, Exception? exception = null, DateTime? occurredAt = null)
+            : base(reason, details, subTypeID, canRetry, exception, occurredAt) { }
+    }
+
 
     /// <summary>
     /// Represents an unknown failure.

@@ -60,6 +60,8 @@ public class Failure_SerializationTests_Json
     [InlineData(nameof(Failure.JsonFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
     [InlineData(nameof(Failure.GrpcFailure), "Reason for failure", null, 0, false, null, null)]
     [InlineData(nameof(Failure.GrpcFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
+    [InlineData(nameof(Failure.ConversionFailure), "Reason for failure", null, 0, false, null, null)]
+    [InlineData(nameof(Failure.ConversionFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
     [InlineData(nameof(Failure.UnknownFailure), "Reason for failure", null, 0, false, null, null)]
     [InlineData(nameof(Failure.UnknownFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
     public void Should_be_able_to_serialize_and_deserialize_all_failure_types_using_the_json_constructor_attribute(string typeName, string? reason, string? details, int subTypeID, bool canRetry, string? exceptionMessage, string? occurredAtString)

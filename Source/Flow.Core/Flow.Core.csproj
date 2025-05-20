@@ -15,12 +15,12 @@
 	<GeneratePackageOnBuild>False</GeneratePackageOnBuild>    
 	<PackageReadmeFile>ReadMe.md</PackageReadmeFile>	
 	<PackageIcon>icon-64.png</PackageIcon>	  
-	<FileVersion>3.1.0</FileVersion>
+	<FileVersion>3.1.1</FileVersion>
 	<Copyright>Copyright (c) 2024 Paul Kent.</Copyright>
-	<PackageVersion>3.1.0</PackageVersion>
-	<AssemblyVersion>3.1.0</AssemblyVersion>
-	<InformationalVersion>3.1.0</InformationalVersion>
-	<Version>3.1.0</Version>	  
+	<PackageVersion>3.1.1</PackageVersion>
+	<AssemblyVersion>3.1.1</AssemblyVersion>
+	<InformationalVersion>3.1.1</InformationalVersion>
+	<Version>3.1.1</Version>	  
     <RepositoryUrl>https://github.com/code-dispenser/Flow</RepositoryUrl>	  
 	<PackageProjectUrl>https://github.com/code-dispenser/Flow</PackageProjectUrl>
 	<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -28,7 +28,8 @@
 	<EmbedUntrackedSources>true</EmbedUntrackedSources>
 	<DebugType>embedded</DebugType>
 	<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-	<PackageReleaseNotes>New BindFailure and OnFailure overloads</PackageReleaseNotes>
+	<PackageReleaseNotes>A null passed to the implicit operator would raise an exception. 
+Changed this behaviour to return a failed flow with the ConversionFailure type (newly added).  </PackageReleaseNotes>
 	  
   </PropertyGroup>
 
