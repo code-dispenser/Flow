@@ -192,6 +192,8 @@ The following extension also have Task based variants/overloads.
 
 * ***OnFailure:*** Executes only on failure, passes the current failure to an action, and returns the current flow or executes a flow-returning function.
 
+* ***OnFailureTry:*** A variant of OnFailure that is wrapped in a try-catch block; you supply the exception handler to use in the catch block.
+
 * ***ReturnAs:*** A wrapper around Map to make things easier to read in circumstances where you are changing the type of value in the flow.
 
 * ***Finally:*** Returns the value from the flow via two functions: one for failure and the other for success. This is essentially a wrapper around Match.
@@ -256,6 +258,8 @@ The following derived failure types are available for use:
 * CacheFailure
 * JsonFailure
 * GrpcFailure
+* ConversionFailure
+
 
 * ***UnknownFailure*** - has been given a type discriminator of 199 to allow for additional types to be added to the library. Your custom failures, if serialized will need a value greater than 199 for its type discriminator. The same values have been assigned to both the JsonDerivedType and ProtoInclude attributes.
 
