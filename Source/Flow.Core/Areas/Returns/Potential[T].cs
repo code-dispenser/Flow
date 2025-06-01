@@ -6,7 +6,7 @@ namespace Flow.Core.Areas.Returns;
 
 
 [ProtoContract]
-public readonly record struct Might<T> where T : notnull
+public readonly record struct Potential<T> where T : notnull
 {
     private readonly T _value;
 
@@ -19,7 +19,7 @@ public readonly record struct Might<T> where T : notnull
     public bool HasNoValue => !HasValue;
 
 
-    public Might(T value)
+    public Potential(T value)
     {
         if (value is null) throw new ArgumentNullException(nameof(value));
 
@@ -27,17 +27,17 @@ public readonly record struct Might<T> where T : notnull
         HasValue = true;
     }
     [JsonConstructor]
-    private Might(T Value, bool hasValue)
+    private Potential(T Value, bool hasValue)
     {
         _value   = Value;
         HasValue = hasValue;
     }
 
-    public static implicit operator Might<T>(T value) => value is null ? default : new Might<T>(value);
-    public static implicit operator Might<T>(None _) => default;
+    public static implicit operator Potential<T>(T value) => value is null ? default : new Potential<T>(value);
+    public static implicit operator Potential<T>(None _) => default;
 
-    public static Might<T> WithoutValue() => default;
-    public static Might<T> WithValue(T value) => new Might<T>(value);
+    public static Potential<T> WithoutValue() => default;
+    public static Potential<T> WithValue(T value) => new Potential<T>(value);
 
 
     public T GetValueOr(T orValue)
@@ -52,15 +52,15 @@ public readonly record struct Might<T> where T : notnull
 
         => HasValue ? onValue(_value) : onNoValue();
 
-    public Might<TOut> Map<TOut>(Func<T, TOut> onValue) where TOut : notnull
+    public Potential<TOut> Map<TOut>(Func<T, TOut> onValue) where TOut : notnull
 
-        => HasValue ? new Might<TOut>(onValue(_value)) : default;
+        => HasValue ? new Potential<TOut>(onValue(_value)) : default;
 
-    public Might<TOut> Bind<TOut>(Func<T, Might<TOut>> onValue) where TOut : notnull
+    public Potential<TOut> Bind<TOut>(Func<T, Potential<TOut>> onValue) where TOut : notnull
 
         => HasValue ? onValue(_value) : default;
 
     public override string ToString()
 
-        => HasValue ? $"Might({_value})" : "Ø";
+        => HasValue ? $"Potential({_value})" : "Ø";
 }
