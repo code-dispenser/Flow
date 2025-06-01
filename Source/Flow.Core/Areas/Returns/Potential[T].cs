@@ -27,9 +27,9 @@ public readonly record struct Potential<T> where T : notnull
         HasValue = true;
     }
     [JsonConstructor]
-    private Potential(T Value, bool hasValue)
+    private Potential(T value, bool hasValue)
     {
-        _value   = Value;
+        _value   = value;
         HasValue = hasValue;
     }
 

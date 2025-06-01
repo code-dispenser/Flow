@@ -2,11 +2,6 @@
 using Flow.Core.Areas.Returns;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flow.Core.Tests.Functional.Areas.Extensions;
 
@@ -47,7 +42,7 @@ public class PotentialExtensionTests_Sequence
     }
 
     [Fact]
-    public void Sequence_should_through_an_excetpion_if_the_collection_is_null()
+    public void Sequence_should_through_an_exception_if_the_collection_is_null()
     {
         List<Potential<int>> listOfPotentials = null!;
 
