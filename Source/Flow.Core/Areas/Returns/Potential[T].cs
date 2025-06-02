@@ -40,9 +40,9 @@ public readonly record struct Potential<T> where T : notnull
     public static Potential<T> WithValue(T value) => new Potential<T>(value);
 
 
-    public T GetValueOr(T orValue)
+    public T Reduce(T fallback)
 
-        => HasValue ? _value : orValue;
+        => HasValue ? _value : fallback;
 
     public void Match(Action act_onNoValue, Action<T> act_onValue)
     {

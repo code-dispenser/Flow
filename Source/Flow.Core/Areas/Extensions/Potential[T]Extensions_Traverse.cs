@@ -15,11 +15,11 @@ public static partial class PotentialExtensions
         {
             if (potential.HasNoValue) return Potential<IEnumerable<TOut>>.WithoutValue();
 
-            var newPotential = onValue(potential.GetValueOr(default!));
+            var newPotential = onValue(potential.Reduce(default!));
 
             if (newPotential.HasNoValue) return Potential<IEnumerable<TOut>>.WithoutValue();
 
-            list.Add(newPotential.GetValueOr(default!));
+            list.Add(newPotential.Reduce(default!));
         }
 
         return Potential<IEnumerable<TOut>>.WithValue(list);
