@@ -14,7 +14,7 @@ public class Potential_ExtensionTests_OrElse
 
         var result = withNoValue.OrElse(() => new Potential<string>("hello world"));
 
-        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.Reduce(string.Empty) == "hello world");
+        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.GetValueOr(string.Empty) == "hello world");
     }
 
     [Fact]
@@ -24,7 +24,7 @@ public class Potential_ExtensionTests_OrElse
 
         var result = withValue.OrElse(() => new Potential<string>("some other world"));
 
-        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.Reduce(string.Empty) == "hello world");
+        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.GetValueOr(string.Empty) == "hello world");
     }
     [Fact]
     public void Or_else_should_only_execute_the_function_if_there_is_no_value()///Bind
@@ -33,7 +33,7 @@ public class Potential_ExtensionTests_OrElse
 
         var result = withNoValue.OrElse(() => "hello world");
 
-        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.Reduce(string.Empty) == "hello world");
+        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.GetValueOr(string.Empty) == "hello world");
     }
 
     [Fact]
@@ -43,6 +43,6 @@ public class Potential_ExtensionTests_OrElse
 
         var result = withValue.OrElse(() => "some other world");
 
-        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.Reduce(string.Empty) == "hello world");
+        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.GetValueOr(string.Empty) == "hello world");
     }
 }

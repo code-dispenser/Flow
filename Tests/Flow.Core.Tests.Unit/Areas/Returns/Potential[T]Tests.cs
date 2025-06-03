@@ -16,7 +16,7 @@ public class PotentialTests
         using (new AssertionScope())
         {
             withValue.Should().Match<Potential<int>>(m => m.HasValue == true && m.HasNoValue == false);
-            withValue.Reduce(0).Should().Be(42);
+            withValue.GetValueOr(0).Should().Be(42);
         }
 
     }
@@ -28,7 +28,7 @@ public class PotentialTests
         using (new AssertionScope())
         {
             withoutValue.Should().Match<Potential<int>>(m => m.HasValue == false && m.HasNoValue == true);
-            withoutValue.Reduce(0).Should().Be(0);
+            withoutValue.GetValueOr(0).Should().Be(0);
             withoutValue.ToString().Should().Be("Ø");
         }
     }
@@ -47,7 +47,7 @@ public class PotentialTests
         using (new AssertionScope())
         {
             withoutValue.Should().Match<Potential<string>>(m => m.HasValue == false && m.HasNoValue == true);
-            withoutValue.Reduce("Failed").Should().Be("Failed");
+            withoutValue.GetValueOr("Failed").Should().Be("Failed");
             withoutValue.ToString().Should().Be("Ø");
         }
     }
@@ -58,7 +58,7 @@ public class PotentialTests
         using (new AssertionScope())
         {
             withoutValue.Should().Match<Potential<int>>(m => m.HasValue == false && m.HasNoValue == true);
-            withoutValue.Reduce(-1).Should().Be(-1);
+            withoutValue.GetValueOr(-1).Should().Be(-1);
             withoutValue.ToString().Should().Be("Ø");
         }
     }
@@ -69,7 +69,7 @@ public class PotentialTests
         using (new AssertionScope())
         {
             withValue.Should().Match<Potential<string>>(m => m.HasValue == true && m.HasNoValue == false);
-            withValue.Reduce("Failed").Should().Be("Passed");
+            withValue.GetValueOr("Failed").Should().Be("Passed");
         }
     }
 
@@ -130,7 +130,7 @@ public class PotentialTests
         using (new AssertionScope())
         {
             mappedPotential.Should().Match<Potential<int>>(m => m.HasValue == true && m.HasNoValue == false);
-            mappedPotential.Reduce(0).Should().Be(43);
+            mappedPotential.GetValueOr(0).Should().Be(43);
         }
     }
     [Fact]
@@ -143,7 +143,7 @@ public class PotentialTests
         using (new AssertionScope())
         {
             mappedPotential.Should().Match<Potential<int>>(m => m.HasValue == false && m.HasNoValue == true);
-            mappedPotential.Reduce(-1).Should().Be(-1);
+            mappedPotential.GetValueOr(-1).Should().Be(-1);
             mappedPotential.ToString().Should().Be("Ø");
         }
     }
@@ -158,7 +158,7 @@ public class PotentialTests
         using (new AssertionScope())
         {
             potentialBind.Should().Match<Potential<int>>(m => m.HasValue == true && m.HasNoValue == false);
-            potentialBind.Reduce(0).Should().Be(43);
+            potentialBind.GetValueOr(0).Should().Be(43);
         }
     }
     [Fact]
@@ -171,21 +171,24 @@ public class PotentialTests
         using (new AssertionScope())
         {
             potentialBind.Should().Match<Potential<int>>(m => m.HasValue == false && m.HasNoValue == true);
-            potentialBind.Reduce(-1).Should().Be(-1);
+            potentialBind.GetValueOr(-1).Should().Be(-1);
         }
     }
 
     [Fact]
-    public void Reduce_should_return_the_value_when_there_is_a_value()
+    public void GetValueOr_should_return_the_value_when_the_potential_has_a_value()
     {
-        Potential<int> withValue = 42;
-        withValue.Reduce(24).Should().Be(42);
+        Potential<int> potentialWithValue = Potential<int>.WithValue(42);
+
+        int result = potentialWithValue.GetValueOr(0);
+        result.Should().Be(42);
     }
     [Fact]
-    public void Reduce_should_return_the_fallback_value_when_there_is_no_value()
+    public void GetValueOr_should_return_the_fallback_value_when_the_potential_has_no_value()
     {
-        Potential<int> withoutValue = null!;
-        withoutValue.Reduce(42).Should().Be(42);
+        Potential<int> potentialWithoutValue = Potential<int>.WithoutValue();
+        int result = potentialWithoutValue.GetValueOr(42);
+        result.Should().Be(42);
     }
 
     [Fact]

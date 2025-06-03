@@ -40,7 +40,7 @@ public readonly record struct Potential<T> where T : notnull
     public static Potential<T> WithValue(T value) => new Potential<T>(value);
 
 
-    public T Reduce(T fallback)
+    public T GetValueOr(T fallback)
 
         => HasValue ? _value : fallback;
 

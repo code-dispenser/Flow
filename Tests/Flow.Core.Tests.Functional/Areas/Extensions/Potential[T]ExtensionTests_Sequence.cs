@@ -18,7 +18,7 @@ public class PotentialExtensionTests_Sequence
         using (new FluentAssertions.Execution.AssertionScope())
         {
             potentialValues.Should().Match<Potential<IEnumerable<int>>>(r => r.HasValue == true && r.HasNoValue == false);
-            var list = potentialValues.Reduce([]).ToList();
+            var list = potentialValues.GetValueOr([]).ToList();
             list.Should().HaveCount(3);
             list[1].Should().Be(2);
         }
@@ -34,7 +34,7 @@ public class PotentialExtensionTests_Sequence
         {
             potentialValues.Should().Match<Potential<IEnumerable<int>>>(r => r.HasValue == false && r.HasNoValue == true);
 
-            var list = potentialValues.Reduce([]).ToList();
+            var list = potentialValues.GetValueOr([]).ToList();
 
             list.Should().HaveCount(0);
 

@@ -16,7 +16,7 @@ public class Potential_ExtensionTests_AndThen
 
         var result = withValue.AndThen(value => new Potential<string>(value.ToString() + " world"));
 
-        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.Reduce(string.Empty) == "42 world");
+        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.GetValueOr(string.Empty) == "42 world");
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public class Potential_ExtensionTests_AndThen
 
         var result = withoutValue.AndThen(value => new Potential<string>(value + " world"));//type should still change to Potential<string>
 
-        result.Should().Match<Potential<string>>(r => r.HasValue == false && r.Reduce(String.Empty) == String.Empty);
+        result.Should().Match<Potential<string>>(r => r.HasValue == false && r.GetValueOr(String.Empty) == String.Empty);
     }
 
 
@@ -37,7 +37,7 @@ public class Potential_ExtensionTests_AndThen
 
         var result = withValue.AndThen(value => value.ToString() + " world");
 
-        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.Reduce(string.Empty) == "42 world");
+        result.Should().Match<Potential<string>>(r => r.HasValue == true && r.GetValueOr(string.Empty) == "42 world");
 
     }
     [Fact]
@@ -47,7 +47,7 @@ public class Potential_ExtensionTests_AndThen
 
         var result = withoutValue.AndThen(value => value + " world");//type should still change to Potential<string>
 
-        result.Should().Match<Potential<string>>(r => r.HasValue == false && r.Reduce(String.Empty) == String.Empty);
+        result.Should().Match<Potential<string>>(r => r.HasValue == false && r.GetValueOr(String.Empty) == String.Empty);
     }
 
 }

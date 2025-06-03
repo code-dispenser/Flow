@@ -14,7 +14,7 @@ public static partial class PotentialSequence
         {
             if (potential.HasNoValue) return Potential<IEnumerable<T>>.WithoutValue();
 
-            list.Add(potential.Reduce(default!));
+            list.Add(potential.GetValueOr(default!));
 
         }
 

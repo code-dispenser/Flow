@@ -20,7 +20,7 @@ public class Potential_SerializationTests
         using (new AssertionScope())
         {
             deserializedPotential.Should().Match<Potential<Person>>(m => m.HasValue == false && m.HasNoValue == true);
-            deserializedPotential.Reduce(new Person("FirstName", "Surname", 42)).Should().Match<Person>(p => p.FirstName == "FirstName" && p.Surname == "Surname" && p.Age == 42);
+            deserializedPotential.GetValueOr(new Person("FirstName", "Surname", 42)).Should().Match<Person>(p => p.FirstName == "FirstName" && p.Surname == "Surname" && p.Age == 42);
         }
     }
 
@@ -33,7 +33,7 @@ public class Potential_SerializationTests
         using (new AssertionScope())
         {
             deserializedPotential.Should().Match<Potential<Person>>(r => r.HasValue == true && r.HasNoValue == false);
-            deserializedPotential.Reduce(new Person("FirstName", "Surname", 42)).Should().Match<Person>(p => p.FirstName == "John" && p.Surname == "Doe" && p.Age == 25);
+            deserializedPotential.GetValueOr(new Person("FirstName", "Surname", 42)).Should().Match<Person>(p => p.FirstName == "John" && p.Surname == "Doe" && p.Age == 25);
         }
     }
 
@@ -48,7 +48,7 @@ public class Potential_SerializationTests
         using (new AssertionScope())
         {
             deserializedPotential.Should().Match<Potential<Person>>(m => m.HasValue == false && m.HasNoValue == true);
-            deserializedPotential.Reduce(new Person("FirstName", "Surname", 42)).Should().Match<Person>(p => p.FirstName == "FirstName" && p.Surname == "Surname" && p.Age == 42);
+            deserializedPotential.GetValueOr(new Person("FirstName", "Surname", 42)).Should().Match<Person>(p => p.FirstName == "FirstName" && p.Surname == "Surname" && p.Age == 42);
         }
 
     }
@@ -64,7 +64,7 @@ public class Potential_SerializationTests
         using (new AssertionScope())
         {
             deserializedPotential.Should().Match<Potential<Person>>(m => m.HasValue == true && m.HasNoValue == false);
-            deserializedPotential.Reduce(new Person("FirstName", "Surname", 42)).Should().Match<Person>(p => p.FirstName == "John" && p.Surname == "Doe" && p.Age == 25);
+            deserializedPotential.GetValueOr(new Person("FirstName", "Surname", 42)).Should().Match<Person>(p => p.FirstName == "John" && p.Surname == "Doe" && p.Age == 25);
         }
 
     }

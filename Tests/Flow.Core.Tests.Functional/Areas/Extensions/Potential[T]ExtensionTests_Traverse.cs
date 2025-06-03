@@ -12,7 +12,7 @@ namespace Flow.Core.Tests.Functional.Areas.Extensions
             var potentials = new List<Potential<int>> { Potential<int>.WithValue(1), Potential<int>.WithValue(2), Potential<int>.WithValue(3) };
             var result     = potentials.Traverse(value => Potential<int>.WithValue(value * 2));
 
-            result.Should().Match<Potential<IEnumerable<int>>>(r => r.HasValue == true && r.Reduce(new List<int>()).SequenceEqual(new List<int> { 2, 4, 6 }));
+            result.Should().Match<Potential<IEnumerable<int>>>(r => r.HasValue == true && r.GetValueOr(new List<int>()).SequenceEqual(new List<int> { 2, 4, 6 }));
         }
 
         [Fact]
@@ -21,7 +21,7 @@ namespace Flow.Core.Tests.Functional.Areas.Extensions
             var potentials = new List<Potential<int>> { Potential<int>.WithValue(1), Potential<int>.WithoutValue(), Potential<int>.WithValue(3) };
             var result     = potentials.Traverse(value => Potential<int>.WithValue(value * 2));
 
-            result.Should().Match<Potential<IEnumerable<int>>>(r => r.HasValue == false && r.Reduce(new List<int>()).SequenceEqual(new List<int>()));
+            result.Should().Match<Potential<IEnumerable<int>>>(r => r.HasValue == false && r.GetValueOr(new List<int>()).SequenceEqual(new List<int>()));
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Flow.Core.Tests.Functional.Areas.Extensions
             var potentials = new List<Potential<int>> { Potential<int>.WithValue(1), Potential<int>.WithValue(2), Potential<int>.WithValue(3) };
             var result = potentials.Traverse(_ => Potential<int>.WithoutValue());
 
-            result.Should().Match<Potential<IEnumerable<int>>>(r => r.HasValue == false && r.Reduce(new List<int>()).SequenceEqual(new List<int>()));
+            result.Should().Match<Potential<IEnumerable<int>>>(r => r.HasValue == false && r.GetValueOr(new List<int>()).SequenceEqual(new List<int>()));
         }
     }
 }
