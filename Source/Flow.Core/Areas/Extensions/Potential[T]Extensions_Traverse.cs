@@ -5,23 +5,21 @@ namespace Flow.Core.Areas.Extensions;
 
 public static partial class PotentialExtensions
 {
-    public static Potential<IEnumerable<TOut>> Traverse<TIn, TOut>(this IEnumerable<Potential<TIn>> potentials, Func<TIn, Potential<TOut>> onValue) where TIn : notnull where TOut : notnull
+    public static Potential<IEnumerable<TOut>> Traverse<TIn, TOut>(this IEnumerable<TIn> source, Func<TIn, Potential<TOut>> transformer) where TIn : notnull where TOut : notnull
     {
-        if (potentials is null) throw new ArgumentNullException(nameof(potentials));
+        if (source is null) throw new ArgumentNullException(nameof(source));
 
-        List<TOut> list = [];
+        List<TOut> transformerResults = [];
 
-        foreach (var potential in potentials)
+        foreach (var item in source)
         {
-            if (potential.HasNoValue) return Potential<IEnumerable<TOut>>.WithoutValue();
+            var newOption = transformer(item);
 
-            var newPotential = onValue(potential.GetValueOr(default!));
+            if (newOption.HasNoValue) return Potential<IEnumerable<TOut>>.WithoutValue();
 
-            if (newPotential.HasNoValue) return Potential<IEnumerable<TOut>>.WithoutValue();
-
-            list.Add(newPotential.GetValueOr(default!));
+            transformerResults.Add(newOption.GetValueOr(default!));
         }
 
-        return Potential<IEnumerable<TOut>>.WithValue(list);
+        return Potential<IEnumerable<TOut>>.WithValue(transformerResults);
     }
 }
