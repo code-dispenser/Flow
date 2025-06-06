@@ -42,7 +42,7 @@ public class PotentialTests
     [Fact]
     public void Implicit_conversion_with_a_null_should_create_a_potential_without_a_value()
     {
-        string nullValue = null;
+        string nullValue = null!;
         Potential<string> withoutValue = nullValue!;
         using (new AssertionScope())
         {
