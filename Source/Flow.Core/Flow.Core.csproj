@@ -46,7 +46,7 @@ Changed this behaviour to return a failed flow with the ConversionFailure type (
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="protobuf-net" Version="3.2.52" />
+    <PackageReference Include="protobuf-net" Version="3.2.56" />
   </ItemGroup>
 
 	<ItemGroup>
