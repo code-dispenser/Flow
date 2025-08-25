@@ -1,7 +1,9 @@
-﻿using ProtoBuf;
+﻿using Flow.Core.Common.Models;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -36,6 +38,7 @@ namespace Flow.Core.Areas.Returns;
 [JsonDerivedType(typeof(JsonFailure), 122)]
 [JsonDerivedType(typeof(GrpcFailure), 123)]
 [JsonDerivedType(typeof(ConversionFailure), 124)]
+[JsonDerivedType(typeof(InvalidEntryFailure), 125)]
 
 [JsonDerivedType(typeof(UnknownFailure), 199)]
 
@@ -53,7 +56,8 @@ namespace Flow.Core.Areas.Returns;
     ProtoInclude(118, typeof(SystemFailure)), ProtoInclude(119, typeof(TaskCancellationFailure)),
     ProtoInclude(120, typeof(InternetConnectionFailure)), ProtoInclude(121, typeof(CacheFailure)),
     ProtoInclude(122, typeof(JsonFailure)), ProtoInclude(123, typeof(GrpcFailure)),
-    ProtoInclude(124, typeof(ConversionFailure)), ProtoInclude(199, typeof(UnknownFailure))
+    ProtoInclude(124, typeof(ConversionFailure)), ProtoInclude(125, typeof(InvalidEntryFailure)),
+    ProtoInclude(199, typeof(UnknownFailure))
 
 ]
 public abstract class Failure
@@ -474,6 +478,28 @@ public abstract class Failure
         [JsonConstructor()]
         public ConversionFailure(string reason, Dictionary<string, string>? details = null, int subTypeID = 0, bool canRetry = false, Exception? exception = null, DateTime? occurredAt = null)
             : base(reason, details, subTypeID, canRetry, exception, occurredAt) { }
+    }
+
+    /// <summary>
+    /// Represents an invalid entry failure that contains a list of invalid entries.
+    /// </summary>
+    [ProtoContract]
+    public sealed class InvalidEntryFailure : Failure
+    {
+        /// <summary>
+        /// Gets the list of invalid entries.
+        /// </summary>
+        [ProtoMember(10)]
+        public List<InvalidEntry> InvalidEntries { get; } = new List<InvalidEntry>();
+        private InvalidEntryFailure() : base("", [], 0, false, null, null) { }
+
+        /// <inheritdoc/>
+        [JsonConstructor()]
+        public InvalidEntryFailure(List<InvalidEntry> invalidEntries, string reason, Dictionary<string, string>? details = null, int subTypeID = 0, bool canRetry = false, Exception? exception = null, DateTime? occurredAt = null)
+            : base(reason, details, subTypeID, canRetry, exception, occurredAt) 
+        {
+            InvalidEntries = invalidEntries;
+        }
     }
 
 

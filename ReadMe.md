@@ -259,10 +259,12 @@ The following derived failure types are available for use:
 * JsonFailure
 * GrpcFailure
 * ConversionFailure
+* InvalidEntryFailure
 
 
 * ***UnknownFailure*** - has been given a type discriminator of 199 to allow for additional types to be added to the library. Your custom failures, if serialized will need a value greater than 199 for its type discriminator. The same values have been assigned to both the JsonDerivedType and ProtoInclude attributes.
 
+**Note:** `InvalidEntryFailure` unlike the others, has a `List<InvalidEntry InvalidEntries` property for showing all validation errors, for example, when validating an object or object graph.
 
 ***All feedback, positive or negative, is welcome.***
 

@@ -1,9 +1,11 @@
 ﻿using Flow.Core.Areas.Returns;
+using Flow.Core.Common.Models;
 using Flow.Core.Tests.SharedDataAndFixtures.Common.CustomFailures;
 using Flow.Core.Tests.SharedDataAndFixtures.Common.Models;
 using Flow.Core.Tests.SharedDataAndFixtures.Common.Utilities;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using ProtoBuf.Meta;
 using System.Security.AccessControl;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
@@ -112,6 +114,38 @@ public class Failure_SerializationTests_Json
             deserializedFailure.GetType().Should().Be(failureType);
         }
     }
+
+    [Theory]
+    [InlineData("Reason for failure", null, 0, false, null, null)]
+    [InlineData(" ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
+    public void Should_be_able_to_serialize_and_deserialize_an_invalid_entry_failure_using_the_json_constructor_attribute(string? reason, string? details, int subTypeID, bool canRetry, string? exceptionMessage, string? occurredAtString)
+    {
+        List<InvalidEntry> invalidEntries           = [new("FailureMessage", "Path", "PropertyName", "DisplayName", "Cause")];
+        Dictionary<string, string>? failureDetails  = String.IsNullOrWhiteSpace(details) ? null : new Dictionary<string, string>() { ["Key"]="Value" };
+
+        DateTime? occurredAt = occurredAtString is null ? null : DateTime.Parse(occurredAtString);
+        Exception? exception = exceptionMessage is null ? null : new Exception(exceptionMessage);
+
+        var failureToSerialize  = new Failure.InvalidEntryFailure(invalidEntries, reason!, failureDetails, subTypeID, canRetry, exception, occurredAt);
+        var jsonString          = JsonSerializer.Serialize<Failure.InvalidEntryFailure>(failureToSerialize);
+        var deserializedFailure = JsonSerializer.Deserialize<Failure.InvalidEntryFailure>(jsonString)!;
+
+        using (new AssertionScope())
+        {
+            deserializedFailure.Details.Should().BeEquivalentTo(failureDetails ?? new Dictionary<string, string>());
+            if (true == String.IsNullOrWhiteSpace(reason)) deserializedFailure.Reason.Should().Be(String.Empty);
+            if (false == String.IsNullOrWhiteSpace(reason)) deserializedFailure.Reason?.Should().Be(reason);
+
+            deserializedFailure.Exception.Should().BeNull();//Should always be null as its not serialized
+
+            deserializedFailure.CanRetry.Should().Be(canRetry);
+            deserializedFailure.SubTypeID.Should().Be(subTypeID);
+            deserializedFailure.OccurredAt.Should().BeCloseTo(occurredAt ?? DateTime.UtcNow, TimeSpan.FromSeconds(10));
+            deserializedFailure.InvalidEntries.Count.Should().Be(1);
+        }
+
+    }
+
 
     [Fact]
     public void Should_be_able_to_create_serialize_and_deserialize_an_external_custom_derived_failure()

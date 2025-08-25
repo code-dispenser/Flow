@@ -1,4 +1,5 @@
 ﻿using Flow.Core.Areas.Returns;
+using Flow.Core.Common.Models;
 using Flow.Core.Tests.SharedDataAndFixtures.Common.Utilities;
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -9,8 +10,8 @@ namespace Flow.Core.Tests.Unit.Areas.Returns;
 public class FailureTests
 {
     [Theory]
-    [InlineData(nameof(Failure.NetworkFailure),"Reason for failure", null, 0, false, null, null)]
-    [InlineData(nameof(Failure.NetworkFailure),"  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
+    [InlineData(nameof(Failure.NetworkFailure), "Reason for failure", null, 0, false, null, null)]
+    [InlineData(nameof(Failure.NetworkFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
     [InlineData(nameof(Failure.DatabaseFailure), "Reason for failure", null, 0, false, null, null)]
     [InlineData(nameof(Failure.DatabaseFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
     [InlineData(nameof(Failure.FileSystemFailure), "Reason for failure", null, 0, false, null, null)]
@@ -53,6 +54,7 @@ public class FailureTests
     [InlineData(nameof(Failure.CacheFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
     [InlineData(nameof(Failure.UnknownFailure), "Reason for failure", null, 0, false, null, null)]
     [InlineData(nameof(Failure.UnknownFailure), "  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
+
     public void Derived_constructor_should_pass_all_params_to_the_base_constructor_or_use_the_optional_values(string typeName, string? reason, string? details, int subTypeID, bool canRetry, string? exceptionMessage, string? occurredAtString)
     {
         var failureType = Type.GetType(typeof(Failure).AssemblyQualifiedName!.Replace("Failure", String.Concat("Failure+", typeName)))!;
@@ -84,6 +86,33 @@ public class FailureTests
         }
     }
 
+    [Theory]
+    [InlineData("Reason for failure", null, 0, false, null, null)]
+    [InlineData("  ", "Key:Value", 1, true, "Exception message", "2024-05-17T10:00:00Z")]
+    public void Invalid_entry_constructor_should_pass_all_params_to_the_base_constructor_or_use_the_optional_values(string? reason, string? details, int subTypeID, bool canRetry, string? exceptionMessage, string? occurredAtString)
+    {
+        List<InvalidEntry>          invalidEntries = [new("FailureMessage", "Path", "PropertyName", "DisplayName", "Cause")];
+        Dictionary<string, string>? failureDetails = String.IsNullOrWhiteSpace(details) ? null : new Dictionary<string, string>() { ["Key"]="Value" };
+
+        DateTime? occurredAt = occurredAtString is null ? null : DateTime.Parse(occurredAtString);
+        Exception? exception = exceptionMessage is null ? null : new Exception(exceptionMessage);
+
+        var failure = new Failure.InvalidEntryFailure(invalidEntries, reason!, failureDetails, subTypeID, canRetry, exception, occurredAt);
+
+        using (new AssertionScope())
+        {
+            failure.Details.Should().BeEquivalentTo(failureDetails ?? new Dictionary<string, string>());
+
+            if (true == String.IsNullOrWhiteSpace(reason)) failure.Reason.Should().Be(String.Empty);
+            if (false == String.IsNullOrWhiteSpace(reason)) failure.Reason?.Should().Be(reason);
+
+            failure.Exception.Should().BeEquivalentTo(exception);
+            failure.CanRetry.Should().Be(canRetry);
+            failure.SubTypeID.Should().Be(subTypeID);
+            failure.OccurredAt.Should().BeCloseTo(occurredAt ?? DateTime.UtcNow, TimeSpan.FromSeconds(10));
+        }
+
+    }
 
     [Fact]
     public void The_static_create_no_failure_method_on_the_base_failure_class_should_create_a_failure_of_type_no_failure()
