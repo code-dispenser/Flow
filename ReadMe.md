@@ -103,7 +103,7 @@ int craftyFlowOutput  = craftyFlow.Match(failure => 24, success => success);
 
 successFlowOutput = successFlow
                       .OnSuccess(success => Console.WriteLine($"Success value: {success}"))
-                          .OnFailure(failure => Console.WriteLine(failure.Reason))//or do some other work in here that returns a Flow
+                          .OnFailure(failure => Console.WriteLine(failure.Reason))//or do other work in here that returns a Flow
                                .Finally(_ => 0, success => success); //return 0 or the success value
 
 Console.WriteLine($"The value to use is: {successFlowOutput}\r\n");
@@ -114,7 +114,7 @@ craftyFlowOutput = craftyFlow.OnSuccess(success => Console.WriteLine(success))//
 
 Console.WriteLine($"The value to use is: { craftyFlowOutput}\r\n");
 
-craftyFlowOutput = craftyFlow.OnSuccess(success => Console.WriteLine(success))//this will be skipped as the flow is a failed flow
+craftyFlowOutput = craftyFlow.OnSuccess(success => Console.WriteLine(success))//will be skipped as the flow is a failed flow
                     .OnFailure(failure =>
                     {
                         Console.WriteLine($"Failure reason: {failure.Reason} > Starting another operation . . .");
