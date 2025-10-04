@@ -48,8 +48,9 @@ actions before continuing the flow, and finally, retrieving the values from a fl
 
 ```c#
 /*
-    * To put values into a flow, use static methods or implicit conversions (operators). A success value cannot be null or a type derived from Failure, and
-    * a failure cannot be null; it must be a type derived from Failure. Otherwise, an exception will be raised.
+    * To put values into a flow, use static methods or implicit conversions (operators). A success value cannot be null or a type
+    * derived from Failure, and a failure cannot be null; it must be a type derived from Failure. Otherwise, an exception will be
+    * raised.
 */
 
 var explicitFlowSuccess = Flow<int>.Success(42);
@@ -86,17 +87,24 @@ The following snippet is taken from the method 'RunGettingValuesOutOfAFlowExampl
 var successFlow = Flow<int>.Success(42);
 var craftyFlow  = Flow<int>.Failed(new Failure.ApplicationFailure("Bad flow."));
 /*
-    * The purpose of structures like Flow is to return a value, either a success or failure value, which forces you to think about both scenarios. 
-    * In order to get a value out of a Flow, you need to use its Match method, which requires you to provide functions for both success and failure.
+    * The purpose of structures like Flow is to return a value, either a success or failure
+    * value, which forces you to think about both scenarios. In order to get a value out of
+    * a Flow, you need to use its Match method, which requires you to provide functions for both
+    * success and failure.
 */
-int successFlowOutput = successFlow.Match(failure => 24, success => success); //lambda that just takes the success value and then outputs the success value (success => success)
-int craftyFlowOutput  = craftyFlow.Match(failure => 24, success => success);  //if its a failure return the value 24 (_ => 24).
-
+                     
+int successFlowOutput = successFlow.Match(failure => 24, success => success);
+                         //lambda that just takes the success value and then outputs the success value (success => success)
+                       
+int craftyFlowOutput  = craftyFlow.Match(failure => 24, success => success);  
+                         //if its a failure return the value 24 (_ => 24).
+                         
 // Or we could do some stuff and then decide what values to use for success or failure.
 
-successFlowOutput = successFlow.OnSuccess(success => Console.WriteLine($"Success value: {success}"))
-                                    .OnFailure(failure => Console.WriteLine(failure.Reason))//or do some other work in here that returns a Flow
-                                        .Finally(_ => 0, success => success); //return 0 or the success value
+successFlowOutput = successFlow
+                      .OnSuccess(success => Console.WriteLine($"Success value: {success}"))
+                          .OnFailure(failure => Console.WriteLine(failure.Reason))//or do some other work in here that returns a Flow
+                               .Finally(_ => 0, success => success); //return 0 or the success value
 
 Console.WriteLine($"The value to use is: {successFlowOutput}\r\n");
 
@@ -107,22 +115,25 @@ craftyFlowOutput = craftyFlow.OnSuccess(success => Console.WriteLine(success))//
 Console.WriteLine($"The value to use is: { craftyFlowOutput}\r\n");
 
 craftyFlowOutput = craftyFlow.OnSuccess(success => Console.WriteLine(success))//this will be skipped as the flow is a failed flow
-                                .OnFailure(failure =>
-                                {
-                                    Console.WriteLine($"Failure reason: {failure.Reason} > Starting another operation . . .");
-                                    return 4224;//using implicit conversion could have used Flow<int>.Success(4242) or ran another flow returning function.
-                                                // or even just an int returning function, which would then be implicitly converted;. be careful with non flow returning functions!!!
-                                    /*
-                                             
-                                        * var subFlowOutput = someMethod.OnSuccess(success => DoMoreStuff(success))
-                                        *                                   .OnSuccess(success => YetMoreStuff(success))
-                                        *                                      .Finally(_ => 0, success => success
-                                        *                                      
-                                        * return subFlowOutput // or leave off the finally so the subFlowOutput is just a Flow which the outer finally can deal with   
-                                        *                      // or do some other related flow work and then return Flow<int>.Success(4224) etc
-                                    */
+                    .OnFailure(failure =>
+                    {
+                        Console.WriteLine($"Failure reason: {failure.Reason} > Starting another operation . . .");
+                        return 4224;//using implicit conversion could have used Flow<int>.Success(4242) 
+                                    // or ran another flow returning function.
+                                    // or even just an int returning function, which would then be implicitly converted;. 
+                                    // be careful with non flow returning functions!!!
+                        /*
+                                 
+                            * var subFlowOutput = someMethod.OnSuccess(success => DoMoreStuff(success))
+                            *                                   .OnSuccess(success => YetMoreStuff(success))
+                            *                                      .Finally(_ => 0, success => success
+                            *                                      
+                            * return subFlowOutput // or leave off the finally so the subFlowOutput is just a Flow which the outer 
+                            *                      // finally can deal with or do some other related flow work and then 
+                            *                      // return Flow<int>.Success(4224) etc
+                        */
 
-                                }).Finally(failure => 24, success => success);//return 24 or the success value
+                    }).Finally(failure => 24, success => success);//return 24 or the success value
 
 
 
@@ -134,10 +145,10 @@ As a further example from the demo, although just a simple example, it is the co
 class to query a database, and return the results. Known / anticipated errors would be converted to a Failure and the flow returned as normal.
 ```c#
 var searchResults = await NetworkingUtility
-                            .HasInternetConnection(alwaysOn: false)// just a flag in the demo to cause random failures
-                                .OnSuccess(_ => _customerService.CustomerSearch("Al"))
-                                    .OnFailure(failure => Console.Out.WriteLineAsync($"{failure.GetType().Name}: {failure.Reason}"))
-                                        .Finally(failure => [], success => success.SearchResults.ToList());
+                         .HasInternetConnection(alwaysOn: false)// just a flag in the demo to cause random failures
+                             .OnSuccess(_ => _customerService.CustomerSearch("Al"))
+                                 .OnFailure(failure => Console.Out.WriteLineAsync($"{failure.GetType().Name}: {failure.Reason}"))
+                                     .Finally(failure => [], success => success.SearchResults.ToList());
 
 public async Task<Flow<CustomerSearchResponse>> CustomerSearch(string companyName)
 
@@ -159,11 +170,13 @@ public class CustomerSearchQueryHandler(CustomersDbReadOnly readOnlyDB, IDbExcep
     public async Task<Flow<IEnumerable<CustomerSearchResult>>> Handle(CustomerSearchQuery searchCriteria)
         /*
             * Utility helper within the Flow library so you can wrap method content in a try catch that returns a flow
-            * Using an injected handler specific to database exceptions for the entire app. You could have specific global handlers for file input, messaging etc
+            * Using an injected handler specific to database exceptions for the entire app. You could have specific global 
+            * handlers for file input, messaging etc
          */ 
         => await FlowHandler.TryToFlow
             (
-                async () => await _readOnlyDB.Customers.Where(c => c.CompanyName.Contains(searchCriteria.companyName)).Select(Customer.ProjectToCustomerSearchResult).ToListAsync(),
+                async () => await _readOnlyDB.Customers.Where(c => c.CompanyName.Contains(searchCriteria.companyName))
+                                                        .Select(Customer.ProjectToCustomerSearchResult).ToListAsync(),
                 exception => _exceptionHandler.Handle<IEnumerable<CustomerSearchResult>>(exception)
             );
 
