@@ -21,8 +21,13 @@ public class Checking_Serialization_Examples
         * Most of the time just using the following is all you need to identify any problems
         * 
         * Flow and its associated Failures can be serialized by grpc and json, the T in Flow<T> may not be!. 
-    */ 
+    */
 
+    /*
+        * IMPORTANT I always tend to show types used for gRPC with all the attributes applied. 
+        * However, Since V3 of protobuf-net for types with just simple public get/setters or fields you can, in a lot of cases skip these.
+        * You still need a parameterless constructor which can be private.
+    */
 
     public void GeneralJsonTypeExamples()
     {

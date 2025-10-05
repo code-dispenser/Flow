@@ -8,6 +8,11 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Flow.Core.Demos.AppClient.Common.Models;
+/*
+    * IMPORTANT I always tend to show types used for gRPC with all the attributes applied. 
+    * However, Since V3 of protobuf-net for types with just simple public get/setters or fields you can, in a lot of cases skip these.
+    * You still need a parameterless constructor which can be private.
+*/
 
 [ProtoContract]
 public record class Person
