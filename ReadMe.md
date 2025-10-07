@@ -17,6 +17,8 @@
 Flow (*Flow&lt;T&gt;*) is essentially a simple, lightweight result type that allows for returning a result containing either a success or failure value. The library includes extension methods that 
 ultimately wrap methods on the Flow class, such as **Map** and **Bind**. These methods facilitate the chaining of results, enabling a more declarative, functional approach.
 
+**Full documentation available at:** https://code-dispenser.gitbook.io/flow-docs/
+
 Flow and the provided failure type classes, derived from a **Failure** base class, have all been decorated with attributes from both the **'protobuf-net'** library as well as attributes from **'System.Text.Json'**. 
 This allows for the seamless flow of results across client-server boundaries using either gRPC code-first and the protobuf-net serializer or the System.Text.Json serializer.
 
